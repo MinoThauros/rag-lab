@@ -7,7 +7,8 @@
     "clean:book": "tsx src/cleanBook.ts",
     "chunk:book": "tsx src/chunkBook.ts",
     "load:chunks": "tsx --env-file=.env src/loadChunks.ts",
-    "embed:chunks": "tsx --env-file=.env src/embedChunks.ts"
+    "embed:chunks": "tsx --env-file=.env src/embedChunks.ts",
+    "search": "tsx --env-file=.env src/search.ts"
   },
   "devDependencies": {
     "@types/mdast": "^4.0.4",
