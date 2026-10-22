@@ -6,7 +6,8 @@
     "dev": "nodemon",
     "clean:book": "tsx src/cleanBook.ts",
     "chunk:book": "tsx src/chunkBook.ts",
-    "load:chunks": "tsx --env-file=.env src/loadChunks.ts"
+    "load:chunks": "tsx --env-file=.env src/loadChunks.ts",
+    "embed:chunks": "tsx --env-file=.env src/embedChunks.ts"
   },
   "devDependencies": {
     "@types/mdast": "^4.0.4",
@@ -19,6 +20,7 @@
   "dependencies": {
     "js-tiktoken": "^1.0.21",
     "mdast-util-to-string": "^4.0.0",
+    "openai": "^6.49.0",
     "pg": "^8.23.1",
     "remark-parse": "^11.0.0",
     "remark-stringify": "^11.0.0",
