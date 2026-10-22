@@ -3,7 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "nodemon"
+    "dev": "nodemon",
+    "clean:book": "tsx src/cleanBook.ts"
   },
   "devDependencies": {
     "@types/mdast": "^4.0.4",
