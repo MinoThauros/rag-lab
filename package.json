@@ -10,9 +10,12 @@
     "embed:chunks": "tsx --env-file=.env src/embedChunks.ts",
     "search": "tsx --env-file=.env src/search.ts",
     "ask": "tsx --env-file=.env src/ask.ts",
-    "chat": "tsx --env-file=.env src/chat.ts"
+    "chat": "tsx --env-file=.env src/chat.ts",
+    "web:api": "tsx --env-file=.env src/web.ts",
+    "web": "npm --prefix web run dev"
   },
   "devDependencies": {
+    "@types/express": "^5.0.6",
     "@types/mdast": "^4.0.4",
     "@types/node": "^20.19.43",
     "@types/pg": "^8.23.1",
@@ -21,6 +24,7 @@
     "typescript": "^7.0.2"
   },
   "dependencies": {
+    "express": "^5.3.0",
     "js-tiktoken": "^1.0.21",
     "mdast-util-to-string": "^4.0.0",
     "openai": "^6.49.0",
