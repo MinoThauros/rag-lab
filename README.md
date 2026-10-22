@@ -40,8 +40,8 @@ Nodemon watches `src/` and `data/` and reruns `src/index.ts` on every save. Type
 |---|---|---|---|
 | 0 | Setup | Can I iterate fast? | ✅ |
 | 1 | Document discovery | What will people ask, and what are the documents really like? | Next |
-| 2 | Parsing | How do the documents become clean, structured text? | In progress |
-| 3 | Chunking | What are the units of retrieval? | |
+| 2 | Parsing | How do the documents become clean, structured text? | ✅ (prose, formulas, figures) |
+| 3 | Chunking | What are the units of retrieval? | ✅ first version |
 | 4 | Embedding | How is meaning turned into vectors? | Model decided |
 | 5 | Storage and search | How are the right chunks found? | |
 | 6 | Generation | How does the model answer from them, with citations? | |
@@ -115,16 +115,42 @@ Every parser makes errors (the best score roughly 80–97 on benchmarks, 29–50
 - **Raw PDF:** `src/index.ts` reads pages with unpdf to look at the raw material: positioned text fragments with fonts and sizes.
 - **Docling:** the whole book converted on the server GPU (prose, layout and formulas as LaTeX), saved to `out/book.json`.
 
+**Cleaning (`npm run clean:book`, `src/cleanBook.ts`):** reads `out/book.json`, writes `out/book.clean.json`.
+- Drops 58 copies of the footer that Docling labelled as body text (exact match against its furniture strings).
+- Extracts equation numbers from 202 formulas (`( 2 . 1 )` → `equationNumbers: ["2.1"]`).
+- Moves margin items out of the text flow: 102 terms → keywords, 205 notes → kept with their paragraph, 84 captions → linked to figures.
+- Links unattached "Figure N.N" captions to their figure: captioned figures 90 → 164.
+- Takes chapters, "Exercises", front matter and back matter from the **PDF's own outline** (bookmarks), and numbered sections ("2.1 …") from Docling. Guessing chapter titles from Docling's headings gave wrong ones ("3 70", "5 Example 5.1"); the outline is authoritative.
+
+**Figure descriptions:** a second Docling run on the GPU with picture description on, calling a vision model (Qwen3-VL-4B on vLLM), saved to `out/book.pictures.json`. 67 of 223 figures were described (smaller ones are skipped by `picture_description_area_threshold`); 10 hit the 300-token cap. Descriptions are confident but can invent relationships; spot-check them.
+
 **Definition of done**
 - [x] Markdown parsed into a tree; metadata and clean body logged
-- [ ] The full book converted by Docling and saved locally
-- [ ] Prose pages come out clean: no running headers, page numbers or margin notes mixed into paragraphs
-- [ ] Front and back matter identified so it can be excluded
-- [ ] A handful of equations checked against the book
+- [x] The full book converted by Docling and saved locally
+- [x] Prose pages come out clean: no running headers, page numbers or margin notes mixed into paragraphs
+- [x] Front and back matter identified so it can be excluded
+- [ ] A handful of equations and figure descriptions checked against the book
+- Known and accepted for now: 41 formulas with a number mid-formula, 36 captions without a figure on their page, ~150 paragraphs that may contain merged margin text.
 
 ### 3. Chunking
 
-Split the parsed document into pieces that each make sense on their own: follow the document's structure (sections, paragraphs), roughly 200–500 tokens, little overlap, each chunk prefixed with its heading path and carrying its page for citations. Docling's own chunkers (hierarchical and hybrid) work directly on its output.
+Split the parsed document into pieces that each make sense on their own: follow the document's structure (sections, paragraphs), roughly 200–500 tokens, little overlap, each chunk prefixed with its heading path and carrying its page for citations.
+
+**Tokens.** Sizes are counted in tokens, the unit models read, with the **embedding model's tokenizer** (`cl100k_base` via `js-tiktoken`), so the count matches what `text-embedding-3-large` sees. Chunks stay text; tokens are only counted. LaTeX takes far more tokens per character than prose. Factors behind the size: the embedding model's input limit (hard ceiling), retrieval precision (one vector per chunk, so big chunks blur), self-contained meaning (tiny chunks lose context), the generation model's context budget (chunks retrieved × size + prompt + answer), the document's natural units, and the kind of questions asked. Bigger context windows raise the ceilings but don't fix blurry vectors; evaluation decides the final size.
+
+**Chunker (`npm run chunk:book`, `src/chunkBook.ts`):** reads `out/book.clean.json` and the figure descriptions, writes `out/chunks.json`. Docling ships chunkers (the hybrid one is the RAG default), but they only read Docling's own format and would lose our cleanup, so we apply the same rules to our records:
+
+1. Never cross a section: one heading path per chunk.
+2. Fill up to 400 tokens.
+3. Never split a paragraph or formula; a paragraph longer than the budget alone is split at sentences.
+4. Formulas stay with the text they follow (`$$ … $$ (2.1)`).
+5. Each figure is its own chunk: number, caption, description.
+6. Metadata on every chunk: heading path, pages, keywords, equation numbers, source IDs.
+7. Contents pages, references and index are left out.
+
+**First result:** 1,152 chunks (973 text, 179 figures), median 313 tokens (p10 135, p90 390), 312k tokens in total. 40 chunks exceed the budget because a formula block can't be split (largest 2,234 tokens).
+
+**Later:** run Docling's own hybrid chunker on the same book and compare retrieval scores at evaluation time.
 
 ### 4. Embedding
 
