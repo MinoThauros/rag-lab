@@ -1,19 +1,11 @@
-// Fills chunks.embedding for one document with text-embedding-3-large (1536 dims).
+// Fills chunks.embedding for one document (model and dimensions: embedding.ts).
 // Only embeds chunks that have no embedding yet, or one from a different model,
 // so a failed run can simply be rerun and continues where it stopped.
-import OpenAI from "openai";
 import pg from "pg";
+import { embed, EMBEDDING_MODEL } from "./embedding.ts";
 
 const DOCUMENT_ID = "maths-for-ml";
-const DIMENSIONS = 1536;
-const EMBEDDING_MODEL = `text-embedding-3-large@${DIMENSIONS}`; // stored next to each vector
 const BATCH_SIZE = 64; // texts per API request
-
-const openai = new OpenAI({
-  apiKey: process.env.AZURE_OPENAI_API_KEY,
-  baseURL: `${process.env.AZURE_OPENAI_ENDPOINT!.replace(/\/+$/, "")}/openai/v1/`,
-  maxRetries: 5, // the SDK backs off and retries on rate limits (429)
-});
 
 const db = new pg.Client({
   connectionString: process.env.DATABASE_URL,
@@ -31,12 +23,8 @@ const { rows: todo } = await db.query<{ id: string; text: string }>(
 let tokens = 0;
 for (let start = 0; start < todo.length; start += BATCH_SIZE) {
   const batch = todo.slice(start, start + BATCH_SIZE);
-  const response = await openai.embeddings.create({
-    model: process.env.AZURE_OPENAI_EMBEDDING_DEPLOYMENT!,
-    input: batch.map((c) => c.text),
-    dimensions: DIMENSIONS,
-  });
-  tokens += response.usage.total_tokens;
+  const result = await embed(batch.map((c) => c.text));
+  tokens += result.tokens;
 
   // pgvector reads '[0.1,0.2,…]', which is exactly what JSON.stringify writes.
   await db.query(
@@ -44,7 +32,7 @@ for (let start = 0; start < todo.length; start += BATCH_SIZE) {
         set embedding = v.embedding::extensions.vector, embedding_model = $3
        from unnest($1::text[], $2::text[]) as v(id, embedding)
       where c.id = v.id`,
-    [batch.map((c) => c.id), response.data.map((d) => JSON.stringify(d.embedding)), EMBEDDING_MODEL]
+    [batch.map((c) => c.id), result.vectors.map((v) => JSON.stringify(v)), EMBEDDING_MODEL]
   );
   console.log(`embedded ${Math.min(start + BATCH_SIZE, todo.length)} / ${todo.length}`);
 }
