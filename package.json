@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon",
-    "clean:book": "tsx src/cleanBook.ts"
+    "clean:book": "tsx src/cleanBook.ts",
+    "chunk:book": "tsx src/chunkBook.ts"
   },
   "devDependencies": {
     "@types/mdast": "^4.0.4",
@@ -14,6 +15,7 @@
     "typescript": "^7.0.2"
   },
   "dependencies": {
+    "js-tiktoken": "^1.0.21",
     "mdast-util-to-string": "^4.0.0",
     "remark-parse": "^11.0.0",
     "remark-stringify": "^11.0.0",
