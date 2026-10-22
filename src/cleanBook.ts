@@ -7,7 +7,11 @@
 // 3. Move margin items out of the text flow: terms become keywords, notes stay
 //    with their paragraph, captions go to step 4.
 // 4. Link unattached "Figure N.N" captions to the figure on the same page.
+//
+// Chapters and front/back matter come from the PDF's own outline (bookmarks);
+// numbered section headings ("2.1 ...") come from Docling.
 import { readFile, writeFile } from "node:fs/promises";
+import { getDocumentProxy } from "unpdf";
 
 type Ref = { $ref: string };
 type BBox = { l: number; t: number; r: number; b: number };
@@ -31,12 +35,16 @@ type DoclingDocument = {
 
 type MarginNote = { kind: "term" | "note" | "caption"; text: string };
 
+// contents: table of contents and title pages; front: foreword; back: references, index.
+type Matter = "contents" | "front" | "body" | "back";
+
 type TextRecord = {
   id: string;
   type: string; // Docling label: text, list_item, formula, caption, ...
   text: string;
   page: number;
   bbox: BBox;
+  matter: Matter;
   headingPath: string[];
   keywords: string[];
   notes: string[];
@@ -48,6 +56,7 @@ type FigureRecord = {
   type: "picture" | "table";
   page: number;
   bbox: BBox;
+  matter: Matter;
   headingPath: string[];
   figureNumber?: string;
   caption?: string;
@@ -100,11 +109,74 @@ const furnitureStrings = new Set(
 
 const texts: TextRecord[] = [];
 const figures: FigureRecord[] = [];
-const headingStack: string[] = []; // numbered headings, e.g. ["2 Linear Algebra", "2.1 ..."]
-let localHeading: string | null = null; // latest unnumbered heading ("Exercises")
 
-const headingPath = () =>
-  localHeading ? [...headingStack, localHeading] : [...headingStack];
+// --- Outline: chapters by start page ------------------------------------------
+
+type OutlineItem = { title: string; dest: unknown; items?: OutlineItem[] };
+
+const pdf = await getDocumentProxy(
+  new Uint8Array(await readFile(new URL("../data/maths_for_ML.pdf", import.meta.url)))
+);
+async function pageOf(dest: unknown): Promise<number> {
+  const explicit = typeof dest === "string" ? await pdf.getDestination(dest) : dest;
+  return (await pdf.getPageIndex((explicit as [never])[0])) + 1;
+}
+
+// Flattened to: Foreword, each chapter, each "Exercises", References, Index.
+const outlineEntries: { title: string; page: number }[] = [];
+for (const top of (await pdf.getOutline()) as OutlineItem[]) {
+  for (const item of top.items?.length ? top.items : [top]) {
+    outlineEntries.push({ title: item.title, page: await pageOf(item.dest) });
+  }
+}
+outlineEntries.sort((a, b) => a.page - b.page);
+
+const firstChapterPage = outlineEntries.find((e) => HEADING_NUMBER.test(`${e.title} `))!.page;
+const backMatterPage = outlineEntries.find((e) => e.title === "References")!.page;
+
+function matterOf(page: number): Matter {
+  if (page < outlineEntries[0].page) return "contents";
+  if (page < firstChapterPage) return "front";
+  if (page >= backMatterPage) return "back";
+  return "body";
+}
+
+// The chapter-level path for a page: ["2 Linear Algebra"], or
+// ["2 Linear Algebra", "Exercises"] for the exercises that close a chapter.
+function chapterPathOf(page: number): string[] {
+  const index = outlineEntries.findLastIndex((e) => e.page <= page);
+  if (index < 0) return [];
+  const entry = outlineEntries[index];
+  if (entry.title === "Exercises" && index > 0) return [outlineEntries[index - 1].title, "Exercises"];
+  return [entry.title];
+}
+
+// --- Numbered sections from Docling --------------------------------------------
+
+const sectionTitles = new Map<string, string>(); // "2.1" → "2.1 Systems of Linear Equations"
+let sectionNumber: string | null = null; // latest numbered section, e.g. "2.3.1"
+let localHeading: string | null = null; // latest unnumbered heading ("Example 2.1")
+let lastChapterKey = "";
+
+function headingPath(page: number): string[] {
+  const chapterPath = chapterPathOf(page);
+  const chapterKey = chapterPath.join(" › ");
+  if (chapterKey !== lastChapterKey) {
+    sectionNumber = null;
+    localHeading = null;
+    lastChapterKey = chapterKey;
+  }
+  const chapterNumber = chapterPath[0]?.match(HEADING_NUMBER)?.[1];
+  const sections =
+    sectionNumber && chapterPath.length === 1 && sectionNumber.split(".")[0] === chapterNumber
+      ? sectionNumber
+          .split(".")
+          .slice(1)
+          .map((_, i, parts) => sectionTitles.get([chapterNumber, ...parts.slice(0, i + 1)].join(".")))
+          .filter((title): title is string => Boolean(title))
+      : [];
+  return [...chapterPath, ...sections, ...(localHeading ? [localHeading] : [])];
+}
 
 function walk(ref: Ref) {
   const node = resolve(ref);
@@ -117,7 +189,8 @@ function walk(ref: Ref) {
       type: node.label,
       page: prov.page_no,
       bbox: prov.bbox,
-      headingPath: headingPath(),
+      matter: matterOf(prov.page_no),
+      headingPath: headingPath(prov.page_no),
       caption: node.captions?.map((c) => resolve(c).text ?? "").join(" ") || undefined,
       // Labels inside a figure (axes, diagram words) are its children, not body text.
       innerText: (node.children ?? []).map((c) => resolve(c).text ?? "").filter(Boolean),
@@ -135,12 +208,15 @@ function walk(ref: Ref) {
   if (!prov || !text || node.content_layer === "furniture") return;
 
   if (node.label === "section_header") {
+    headingPath(prov.page_no); // resets section state when the chapter changes
     const number = text.match(HEADING_NUMBER)?.[1];
-    if (number) {
-      const depth = number.split(".").length;
-      headingStack.splice(depth - 1, Infinity, text);
+    const chapterNumber = chapterPathOf(prov.page_no)[0]?.match(HEADING_NUMBER)?.[1];
+    if (number?.includes(".") && number.split(".")[0] === chapterNumber) {
+      // A real section of this chapter ("2.1 ..."); stray numbers like "70" are ignored.
+      sectionTitles.set(number, text);
+      sectionNumber = number;
       localHeading = null;
-    } else {
+    } else if (!number) {
       localHeading = text;
     }
   }
@@ -156,7 +232,8 @@ function walk(ref: Ref) {
     text,
     page: prov.page_no,
     bbox: prov.bbox,
-    headingPath: headingPath(),
+    matter: matterOf(prov.page_no),
+    headingPath: headingPath(prov.page_no),
     keywords: [],
     notes: [],
   };

@@ -9,16 +9,20 @@
 // 5. Each figure is its own chunk: number, caption, and the vision model's
 //    description from out/book.pictures.json when there is one.
 // 6. Every chunk carries metadata: heading path, pages, keywords, equation numbers.
+// 7. Table-of-contents pages, references and index are left out: they mention
+//    every topic, so they would match every question a little.
 import { readFile, writeFile } from "node:fs/promises";
 import { getEncoding } from "js-tiktoken";
 
 type BBox = { l: number; t: number; r: number; b: number };
+type Matter = "contents" | "front" | "body" | "back";
 type TextRecord = {
   id: string;
   type: string;
   text: string;
   page: number;
   bbox: BBox;
+  matter: Matter;
   headingPath: string[];
   keywords: string[];
   notes: string[];
@@ -29,6 +33,7 @@ type FigureRecord = {
   type: "picture" | "table";
   page: number;
   bbox: BBox;
+  matter: Matter;
   headingPath: string[];
   figureNumber?: string;
   caption?: string;
@@ -58,9 +63,13 @@ const countTokens = (text: string) => encoder.encode(text).length;
 
 const SENTENCE_BOUNDARY = /(?<=[.!?])\s+(?=[A-Z(])/;
 
-const { texts, figures } = JSON.parse(
+const clean = JSON.parse(
   await readFile(new URL("../out/book.clean.json", import.meta.url), "utf8")
 ) as { texts: TextRecord[]; figures: FigureRecord[] };
+
+const INDEXED_MATTER: Matter[] = ["front", "body"];
+const texts = clean.texts.filter((r) => INDEXED_MATTER.includes(r.matter));
+const figures = clean.figures.filter((f) => INDEXED_MATTER.includes(f.matter));
 
 // Figure descriptions from the picture-description run (a separate Docling
 // conversion), matched to our figures by page and position.
@@ -213,6 +222,7 @@ await writeFile(new URL("../out/chunks.json", import.meta.url), JSON.stringify(c
 const sizes = chunks.filter((c) => c.kind === "text").map((c) => c.tokens).sort((a, b) => a - b);
 const pct = (p: number) => sizes[Math.min(sizes.length - 1, Math.floor(sizes.length * p))];
 console.log({
+  recordsLeftOut: clean.texts.length - texts.length,
   chunks: chunks.length,
   textChunks: sizes.length,
   figureChunks: chunks.length - sizes.length,
