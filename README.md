@@ -90,6 +90,26 @@ Then pick a **sample of representative pages**, easy and hard, to test parsers o
 
 Choose by testing two or three candidates on the discovery sample and reading the output; the public benchmarks rank tools differently. Whatever the format, the pattern is the same: **parse into structure first, then clean and chunk the structure.**
 
+#### Parser errors at scale
+
+Every parser makes errors (the best score roughly 80–97 on benchmarks, 29–50 on old scans), so with many documents errors are guaranteed. Sort them into two kinds:
+
+| Kind | Example from the book | Handling |
+|---|---|---|
+| **Systematic:** the same mistake everywhere, with a pattern | Equation numbers absorbed into formulas as `( 2 . 1 )`; the copyright footer sometimes labelled as body text | **One rule fixes every occurrence.** This is where cleaning effort goes |
+| **Random:** rare, no pattern | A code snippet read as a formula; one empty formula out of 1,274 | **Measure whether it affects answers; usually accept it.** One-off fixes don't scale |
+
+**Acceptable error has no industry-standard number, and it isn't set at the parsing level.** A parsing error matters only if it causes a wrong or missing answer to a question people actually ask. Agree the target with the client on their question set (for example: the right passage is retrieved X% of the time, the answer is correct Y% of the time), and weigh severity: a wrong answer is worse than "I don't know", so regulated use cases prefer abstaining.
+
+**Workflow for a large corpus: bespoke per class of document, not per document.**
+
+1. **Triage:** classify documents automatically by format, text layer (born-digital or scanned), size, tables. Most corpora collapse into a handful of classes.
+2. **Route each class to a parser tier:** cheap for text-like documents, a layout parser for complex PDFs, OCR models or a managed service for scans. Tools are built for this (Unstructured's fast / hi_res / OCR strategies, Docling's pipelines).
+3. **Sample-test each class:** 20–50 pages, list the systematic errors, write one cleaning rule per error.
+4. **Catch failures with confidence scores:** re-parse low-confidence documents with a stronger tool, or flag them for a person, instead of indexing them silently. Docling returns a `confidence` field.
+5. **Prioritize by what's asked:** spend effort on the documents that answer the most important questions.
+6. **Measure end to end and keep monitoring:** rerun the question set after each change; feed real failures back into it.
+
 **Done so far**
 - **Markdown warm-up:** `src/clean.ts` parses the policy with remark (Markdown → tree), extracts the title and version line as metadata, drops the boilerplate paragraph and unwraps bold and italic.
 - **Raw PDF:** `src/index.ts` reads pages with unpdf to look at the raw material: positioned text fragments with fonts and sizes.
