@@ -19,7 +19,7 @@ export type RetrievedChunk = {
 };
 
 export async function retrieve(
-  db: pg.Client,
+  db: pg.Pool | pg.Client,
   question: string,
   topK: number
 ): Promise<RetrievedChunk[]> {

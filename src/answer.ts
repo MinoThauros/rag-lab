@@ -29,7 +29,7 @@ export type Answer = {
 };
 
 export async function answer(
-  db: pg.Client,
+  db: pg.Pool | pg.Client,
   question: string,
   onToken: (token: string) => void
 ): Promise<Answer> {
