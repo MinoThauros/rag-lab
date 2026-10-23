@@ -1,12 +1,12 @@
 // Interactive Q&A in the terminal, with conversation memory stored in Supabase.
-// Runs as RAG_OWNER_ID (the admin's tool). Usage: npm run chat
+// Runs as OWNER_ID (the admin's tool). Usage: npm run chat
 // Commands: /new (fresh conversation), /sources (last retrieval), /quit
 import { createInterface } from "node:readline";
 import { stdin as input, stdout as output } from "node:process";
 import { startConversation } from "../lib/conversations/conversationStore.ts";
 import { askInConversationService, type ConversationAnswer } from "../services/askInConversationService.ts";
 
-const ownerId = process.env.RAG_OWNER_ID!;
+const ownerId = process.env.OWNER_ID!;
 let conversationId = await startConversation(ownerId);
 
 const rl = createInterface({ input, output });
