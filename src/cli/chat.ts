@@ -3,7 +3,8 @@
 // Commands: /new (fresh conversation), /sources (last retrieval), /quit
 import { createInterface } from "node:readline";
 import { stdin as input, stdout as output } from "node:process";
-import { askInConversation, startConversation, type ConversationAnswer } from "./conversation.ts";
+import { startConversation } from "../lib/conversations/conversationStore.ts";
+import { askInConversationService, type ConversationAnswer } from "../services/askInConversationService.ts";
 
 const ownerId = process.env.RAG_OWNER_ID!;
 let conversationId = await startConversation(ownerId);
@@ -47,7 +48,7 @@ for await (const raw of rl) {
     continue;
   }
 
-  last = await askInConversation(ownerId, conversationId, line, (token) => output.write(token));
+  last = await askInConversationService(ownerId, conversationId, line, (token) => output.write(token));
   output.write("\n\n");
   if (last.standalone !== line) console.log(`  searched for: ${last.standalone}`);
   for (const n of last.cited) console.log(`  [${n}] ${sourceLine(last.sources[n - 1])}`);

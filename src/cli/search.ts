@@ -1,6 +1,6 @@
 // Shows what hybrid retrieval returns for a question, with both ranks.
 // Runs as RAG_OWNER_ID. Usage: npm run search -- "what is an eigenvalue?"
-import { retrieve } from "./retrieve.ts";
+import { retrieve } from "../lib/retrieval/retrieve.ts";
 
 const ownerId = process.env.RAG_OWNER_ID!;
 const question = process.argv.slice(2).join(" ");

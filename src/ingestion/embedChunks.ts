@@ -1,8 +1,8 @@
 // Fills chunks.embedding for one document (model and dimensions: embedding.ts).
 // Only embeds chunks that have no embedding yet, or one from a different model,
 // so a failed run can simply be rerun and continues where it stopped.
-import { embed, EMBEDDING_MODEL } from "./embedding.ts";
-import { supabase } from "./supabase.ts";
+import { embed, EMBEDDING_MODEL } from "../lib/embedding.ts";
+import { supabase } from "../lib/supabase.ts";
 
 const DOCUMENT_ID = "maths-for-ml";
 const BATCH_SIZE = 64; // texts per API request

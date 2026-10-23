@@ -64,7 +64,7 @@ const countTokens = (text: string) => encoder.encode(text).length;
 const SENTENCE_BOUNDARY = /(?<=[.!?])\s+(?=[A-Z(])/;
 
 const clean = JSON.parse(
-  await readFile(new URL("../out/book.clean.json", import.meta.url), "utf8")
+  await readFile(new URL("../../out/book.clean.json", import.meta.url), "utf8")
 ) as { texts: TextRecord[]; figures: FigureRecord[] };
 
 const INDEXED_MATTER: Matter[] = ["front", "body"];
@@ -74,7 +74,7 @@ const figures = clean.figures.filter((f) => INDEXED_MATTER.includes(f.matter));
 // Figure descriptions from the picture-description run (a separate Docling
 // conversion), matched to our figures by page and position.
 const described = (
-  JSON.parse(await readFile(new URL("../out/book.pictures.json", import.meta.url), "utf8"))
+  JSON.parse(await readFile(new URL("../../out/book.pictures.json", import.meta.url), "utf8"))
     .document.json_content.pictures as DoclingPicture[]
 )
   .filter((p) => p.prov?.[0] && p.meta?.description?.text)
@@ -217,7 +217,7 @@ for (const figure of figures) {
   });
 }
 
-await writeFile(new URL("../out/chunks.json", import.meta.url), JSON.stringify(chunks, null, 2));
+await writeFile(new URL("../../out/chunks.json", import.meta.url), JSON.stringify(chunks, null, 2));
 
 const sizes = chunks.filter((c) => c.kind === "text").map((c) => c.tokens).sort((a, b) => a - b);
 const pct = (p: number) => sizes[Math.min(sizes.length - 1, Math.floor(sizes.length * p))];

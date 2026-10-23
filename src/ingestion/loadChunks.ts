@@ -6,7 +6,7 @@
 // safe to rerun. Requests aren't one transaction: if a run fails midway, rerun it.
 import { readFile } from "node:fs/promises";
 import type { Chunk } from "./chunkBook.ts";
-import { supabase } from "./supabase.ts";
+import { supabase } from "../lib/supabase.ts";
 
 const DOCUMENT = {
   id: "maths-for-ml",
@@ -16,7 +16,7 @@ const DOCUMENT = {
 const BATCH_SIZE = 200;
 
 const chunks = JSON.parse(
-  await readFile(new URL("../out/chunks.json", import.meta.url), "utf8")
+  await readFile(new URL("../../out/chunks.json", import.meta.url), "utf8")
 ) as Chunk[];
 
 const check = ({ error }: { error: { message: string } | null }, step: string) => {

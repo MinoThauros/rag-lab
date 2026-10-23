@@ -76,7 +76,7 @@ const ROW_END_EQUATION_NUMBER =
 const HEADING_NUMBER = /^(\d+(?:\.\d+)*)\s/;
 
 const doc = JSON.parse(
-  await readFile(new URL("../out/book.json", import.meta.url), "utf8")
+  await readFile(new URL("../../out/book.json", import.meta.url), "utf8")
 ).document.json_content as DoclingDocument;
 
 function resolve(ref: Ref): DoclingNode {
@@ -115,7 +115,7 @@ const figures: FigureRecord[] = [];
 type OutlineItem = { title: string; dest: unknown; items?: OutlineItem[] };
 
 const pdf = await getDocumentProxy(
-  new Uint8Array(await readFile(new URL("../data/maths_for_ML.pdf", import.meta.url)))
+  new Uint8Array(await readFile(new URL("../../data/maths_for_ML.pdf", import.meta.url)))
 );
 async function pageOf(dest: unknown): Promise<number> {
   const explicit = typeof dest === "string" ? await pdf.getDestination(dest) : dest;
@@ -380,7 +380,7 @@ const finalTexts = kept
   .sort((a, b) => texts.indexOf(a) - texts.indexOf(b)); // back to reading order
 
 await writeFile(
-  new URL("../out/book.clean.json", import.meta.url),
+  new URL("../../out/book.clean.json", import.meta.url),
   JSON.stringify({ texts: finalTexts, figures }, null, 2)
 );
 
