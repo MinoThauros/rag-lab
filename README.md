@@ -10,7 +10,7 @@ The test document is *Mathematics for Machine Learning* (Deisenroth, Faisal & On
 
 ## What it does
 
-Ask a question in a browser or the terminal. The system retrieves the relevant passages from the book with hybrid search, and a local LLM answers **only from those passages**, citing section and page. Math renders as math: matrices, determinants and derivations are typeset with KaTeX.
+Sign in, ask a question in a browser or the terminal, and keep the conversation going. The system retrieves the relevant passages from your documents with hybrid search, and a local LLM answers **only from those passages**, citing section and page. Follow-ups work ("how do I compute it?"), conversations persist per user, and each user only ever sees their own documents and conversations. Math renders as math: matrices, determinants and derivations are typeset with KaTeX.
 
 ```
 Q: How do you compute the eigenvalues of a 2×2 matrix? Show an example.
@@ -58,7 +58,9 @@ flowchart TB
 | Store | **Supabase Postgres + pgvector 0.8** (HNSW) **+ Postgres full-text** (GIN) | One database for vectors, keywords, metadata and permissions; enough for well under ~5–10M vectors |
 | Retrieval | **Hybrid**: top-20 vector + top-20 keyword, merged with **reciprocal rank fusion** | The 2026 baseline; no score calibration needed |
 | Generation | **Qwen3-8B-FP8** on vLLM, 8,192-token context, streaming | Fully local answer path; swappable for any OpenAI-compatible model without re-embedding |
-| Interfaces | Express SSE API, React + shadcn + KaTeX web app, readline terminal chat | Math-heavy answers need real typesetting |
+| Memory | Conversations in Postgres: **last 3 exchanges verbatim + a rolling summary** of older ones; follow-ups **rewritten into standalone questions** before retrieval | The standard short-term memory pattern; retrieval can only search with the text it's given |
+| Auth & tenancy | **Supabase Auth**, httpOnly session cookies, per-user `owner_id` on documents and conversations, RLS policies as a second line of defense | Several people, one deployment, no data crossing between them |
+| Interfaces | Express SSE API, React + shadcn + TanStack Query + KaTeX web app, readline terminal chat | Math-heavy answers need real typesetting |
 
 The choices follow a research pass on 2026 practice (frameworks, memory layers, production write-ups, evaluation, security): [docs/rag-state-of-practice-2026](docs/rag-state-of-practice-2026/report.md).
 
@@ -104,6 +106,32 @@ A vision model on the same GPU described 67 of 223 figures (Docling skips small 
 
 The last two rows are the point: retrieval always returns *something*, and a small model will build a confident bridge from it. That's the failure mode evaluation has to quantify before anything is tuned.
 
+### Conversation memory: where a small model's judgment runs out
+
+Each turn: load the rolling summary and the recent turns → **rewrite** the message into a standalone question → retrieve and answer → save both messages → fold anything older than 3 exchanges into the summary. Messages keep both what the user typed (`content`) and what was actually searched for (`standalone_question`), so every retrieval miss can be traced.
+
+**What worked**
+
+- Pronoun follow-ups: "how do I compute **it** for a 2×2 matrix?" → "How do I compute **the eigenvalues** for a 2×2 matrix?" → Example 4.5, p. 113.
+- The rolling summary: after 5 exchanges, the oldest 2 were folded into a study-log summary ("The user is learning about determinants… established: signed volume of the parallelepiped…") while the last 3 stayed verbatim. Prompt size grew from ~1.7k to ~2.9k tokens over the session, well within 8,192.
+- Topic changes are left alone: "what is a probability distribution?" isn't dragged toward the previous topic.
+
+**What failed, and what each fix showed**
+
+| Failure | Example | Finding |
+|---|---|---|
+| **Follow-up with no pronoun** (ellipsis) | "do you have an example in the book" searched literally → nothing relevant → "I don't know" | Not lost memory: the summary and recent turns were in the rewrite prompt; the model judged the sentence complete. A minimal prompt change in the style of LangChain's contextualize-question prompt ("standalone = understandable without the conversation", plus "fill in an unstated topic") helped, but **Qwen3-8B still left it unchanged in 2 of 4 runs**, with the same prompt and the same questions |
+| **Two possible referents** | "what is the trace?" → "how is **it** related to **them**?" | Qwen3-8B: "How is the determinant related to the trace?" (both wrong) |
+| **Same cases, gpt-5.4-mini as the rewrite model** | — | **3 of 3** example-question runs correct; the two-referent case resolved ("How is the trace related to eigenvalues…") |
+| **Topic change after a long thread** | eigenvalue history, then "what is a probability distribution?" → "I don't know" | Retrieval was right (chapter 6 ranked first by both searches); the eigenvalue history pulled the answer model off. A one-line answer-prompt fix ("earlier turns are background only") fixed that case but, in the next run, the model answered a failed retrieval from history with an **unrelated citation**: a confident answer with a misleading source. Reverted |
+
+**Conclusions**
+
+- **Single runs can't validate prompt changes on a small model.** Fixes "worked" once and flipped on the next run; borderline cases need repeated runs and a scored test set.
+- **The rewrite step needs more model than the answering step.** Rewriting a follow-up is a judgment call about what the user meant; answering from given sources is closer to reading comprehension. A frontier-class model fixed the rewrite failures immediately.
+- **Model strength is a constraint here, not a dial.** The rewrite stays on the local Qwen3-8B; the next step is to fine-tune a small local rewrite model (gpt-5.4-mini's rewrites are a natural source of training examples) instead of sending conversations to a cloud model.
+- The summary drifts past its 200-word cap (~1,000 characters observed): the length instruction is followed loosely.
+
 ---
 
 ## The playbook this is building toward
@@ -124,7 +152,7 @@ For an end-to-end private RAG engagement over technical documents:
 - **Next step: Kubernetes.** Run the models on k3s sharing one GPU, behind Traefik with Supabase login. Decisions still open: [docs/next-step.md](docs/next-step.md).
 - **Evaluation set**: 20+ hand-written questions with expected sources, including unanswerable ones; recall@5 and MRR for retrieval; pass/fail judges for correctness, grounding and refusal.
 - **Refusal guardrails**: relevance threshold and a reranker (Qwen3-Reranker on the GPU) to stop the "stretch" failure.
-- **Follow-up questions**: conversation state so "how do I compute it?" knows what "it" is.
+- **Fine-tune a local rewrite model**: close the gap between Qwen3-8B and gpt-5.4-mini on follow-up rewriting while keeping conversations on the GPU node; measure it on repeated multi-turn runs.
 - **Baselines**: Docling's own hybrid chunker vs ours; Qwen3-8B vs a frontier model on the same retrieval.
 
 ---
