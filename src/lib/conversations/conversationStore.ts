@@ -87,7 +87,7 @@ export async function saveTurn(
     },
   ]);
   fail("save turn", error);
-  await updateConversation(ownerId, conversationId, {});
+  // conversations.updated_at is bumped by the trg_messages_touch_conversation trigger.
 }
 
 export async function saveSummary(
@@ -96,14 +96,10 @@ export async function saveSummary(
   summary: string,
   summarizedThrough: number
 ) {
-  await updateConversation(ownerId, conversationId, { summary, summarized_through: summarizedThrough });
-}
-
-async function updateConversation(ownerId: string, conversationId: string, fields: object) {
   const { error } = await supabase
     .from("conversations")
-    .update({ ...fields, updated_at: new Date().toISOString() })
+    .update({ summary, summarized_through: summarizedThrough }) // updated_at: trg_conversations_updated_at
     .eq("id", conversationId)
     .eq("owner_id", ownerId);
-  fail("update conversation", error);
+  fail("save summary", error);
 }
