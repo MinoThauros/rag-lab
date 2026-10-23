@@ -1,10 +1,10 @@
-// Answers one question, without conversation memory. Runs as RAG_OWNER_ID (the
+// Answers one question, without conversation memory. Runs as OWNER_ID (the
 // terminal is the admin's tool; the web app uses real logins).
 // Usage: npm run ask -- "what is an eigenvalue?"
 import { stdout as output } from "node:process";
 import { answerQuestionService } from "../services/answerQuestionService.ts";
 
-const ownerId = process.env.RAG_OWNER_ID!;
+const ownerId = process.env.OWNER_ID!;
 const question = process.argv.slice(2).join(" ");
 
 console.log(`Q: ${question}\n`);

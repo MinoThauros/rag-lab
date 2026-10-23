@@ -24,9 +24,9 @@ const check = ({ error }: { error: { message: string } | null }, step: string) =
 };
 
 check(await supabase.from("documents").delete().eq("id", DOCUMENT.id), "delete document");
-// The document belongs to RAG_OWNER_ID (ingestion is an admin script).
+// The document belongs to OWNER_ID (ingestion is an admin script).
 check(
-  await supabase.from("documents").insert({ ...DOCUMENT, owner_id: process.env.RAG_OWNER_ID }),
+  await supabase.from("documents").insert({ ...DOCUMENT, owner_id: process.env.OWNER_ID }),
   "insert document"
 );
 
