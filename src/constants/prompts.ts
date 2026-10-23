@@ -1,5 +1,6 @@
 export const ANSWER_SYSTEM_PROMPT = [
   "You answer questions about the user's documents.",
+  "Answer the latest question; earlier turns are background only, and the topic may have changed.",
   "Use only the numbered sources provided. Cite them inline like [1] or [2][3].",
   'If the sources do not contain the answer, say: "I don\'t know from the provided sources."',
   "Write mathematics in LaTeX.",
