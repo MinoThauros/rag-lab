@@ -14,6 +14,10 @@ Goals: practise Kubernetes, and orchestrate several workloads on one GPU the way
 
 Background research: `gpu-node-bootstrap/reports/GPU model serving on k3s.md`.
 
+## Decided
+
+- GPU sharing through time-slicing (the device plugin advertises the one card as several units)
+
 ## Decisions still open
 
 - Which three models share the GPU
