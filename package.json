@@ -12,12 +12,14 @@
     "ask": "tsx --env-file=.env src/ask.ts",
     "chat": "tsx --env-file=.env src/chat.ts",
     "web:api": "tsx --env-file=.env src/web.ts",
-    "web": "npm --prefix web run dev"
+    "web": "concurrently -k -n api,web -c blue,green \"npm:web:api\" \"npm:web:ui\"",
+    "web:ui": "npm --prefix web run dev"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
     "@types/mdast": "^4.0.4",
     "@types/node": "^20.19.43",
+    "concurrently": "^9.2.5",
     "nodemon": "^3.1.14",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2"
