@@ -121,6 +121,7 @@ For an end-to-end private RAG engagement over technical documents:
 
 ## What's next
 
+- **Next step: Kubernetes.** Run the models on k3s sharing one GPU, behind Traefik with Supabase login. Decisions still open: [docs/next-step.md](docs/next-step.md).
 - **Evaluation set**: 20+ hand-written questions with expected sources, including unanswerable ones; recall@5 and MRR for retrieval; pass/fail judges for correctness, grounding and refusal.
 - **Refusal guardrails**: relevance threshold and a reranker (Qwen3-Reranker on the GPU) to stop the "stretch" failure.
 - **Follow-up questions**: conversation state so "how do I compute it?" knows what "it" is.
