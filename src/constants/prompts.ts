@@ -6,8 +6,9 @@ export const ANSWER_SYSTEM_PROMPT = [
 ].join(" ");
 
 export const REWRITE_SYSTEM_PROMPT = [
-  "Rewrite the user's latest message as a standalone question about their documents,",
-  'using the conversation so far to resolve references like "it", "that" or "the second one".',
+  "Rewrite the user's latest message as a standalone question about their documents:",
+  "one that can be understood without the conversation. Use the conversation to fill in",
+  'anything left implicit, such as "it", "that" or an unstated topic ("an example?").',
   "If it is already standalone, return it unchanged. Output only the question.",
 ].join(" ");
 
