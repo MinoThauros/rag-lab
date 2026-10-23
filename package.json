@@ -13,7 +13,8 @@
     "chat": "tsx --env-file=.env src/cli/chat.ts",
     "web:api": "tsx --env-file=.env src/app.ts",
     "web": "concurrently -k -n api,web -c blue,green \"npm:web:api\" \"npm:web:ui\"",
-    "web:ui": "npm --prefix web run dev"
+    "web:ui": "npm --prefix web run dev",
+    "set-password": "tsx --env-file=.env src/cli/setPassword.ts"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.10",
