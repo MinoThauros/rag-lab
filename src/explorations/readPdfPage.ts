@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { getDocumentProxy } from "unpdf";
 
-const buffer = await readFile(new URL("../data/maths_for_ML.pdf", import.meta.url));
+const buffer = await readFile(new URL("../../data/maths_for_ML.pdf", import.meta.url));
 const pdf = await getDocumentProxy(new Uint8Array(buffer));
 
 const page = await pdf.getPage(25);

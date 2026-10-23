@@ -1,7 +1,7 @@
 // Login routes. Accounts are created in the Supabase dashboard; there's no sign-up.
 import { Router } from "express";
-import { clearAuthCookies, requireAuth, setAuthCookies } from "./requireAuth.ts";
-import { authClient } from "./supabase.ts";
+import { clearAuthCookies, requireAuth, setAuthCookies } from "../middleware/requireAuth.ts";
+import { authClient } from "../lib/supabase.ts";
 
 export const authRouter = Router();
 

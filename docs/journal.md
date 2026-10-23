@@ -32,7 +32,7 @@ Mac (this project)                         <gpu-host> (GPU server, over Tailscal
 npm run dev
 ```
 
-Nodemon watches `src/` and `data/` and reruns `src/index.ts` on every save. Type `rs` + Enter to force a rerun, Ctrl-C to stop. `tsx` runs the TypeScript without type-checking; type errors show in the editor.
+Nodemon watches `src/` and `data/` and reruns `src/explorations/readPdfPage.ts` on every save. Type `rs` + Enter to force a rerun, Ctrl-C to stop. `tsx` runs the TypeScript without type-checking; type errors show in the editor.
 
 ## The RAG workflow
 
@@ -111,11 +111,11 @@ Every parser makes errors (the best score roughly 80–97 on benchmarks, 29–50
 6. **Measure end to end and keep monitoring:** rerun the question set after each change; feed real failures back into it.
 
 **Done so far**
-- **Markdown warm-up:** `src/clean.ts` parses the policy with remark (Markdown → tree), extracts the title and version line as metadata, drops the boilerplate paragraph and unwraps bold and italic.
-- **Raw PDF:** `src/index.ts` reads pages with unpdf to look at the raw material: positioned text fragments with fonts and sizes.
+- **Markdown warm-up:** `src/explorations/cleanMarkdown.ts` parses the policy with remark (Markdown → tree), extracts the title and version line as metadata, drops the boilerplate paragraph and unwraps bold and italic.
+- **Raw PDF:** `src/explorations/readPdfPage.ts` reads pages with unpdf to look at the raw material: positioned text fragments with fonts and sizes.
 - **Docling:** the whole book converted on the server GPU (prose, layout and formulas as LaTeX), saved to `out/book.json`.
 
-**Cleaning (`npm run clean:book`, `src/cleanBook.ts`):** reads `out/book.json`, writes `out/book.clean.json`.
+**Cleaning (`npm run clean:book`, `src/ingestion/cleanBook.ts`):** reads `out/book.json`, writes `out/book.clean.json`.
 - Drops 58 copies of the footer that Docling labelled as body text (exact match against its furniture strings).
 - Extracts equation numbers from 202 formulas (`( 2 . 1 )` → `equationNumbers: ["2.1"]`).
 - Moves margin items out of the text flow: 102 terms → keywords, 205 notes → kept with their paragraph, 84 captions → linked to figures.
@@ -138,7 +138,7 @@ Split the parsed document into pieces that each make sense on their own: follow 
 
 **Tokens.** Sizes are counted in tokens, the unit models read, with the **embedding model's tokenizer** (`cl100k_base` via `js-tiktoken`), so the count matches what `text-embedding-3-large` sees. Chunks stay text; tokens are only counted. LaTeX takes far more tokens per character than prose. Factors behind the size: the embedding model's input limit (hard ceiling), retrieval precision (one vector per chunk, so big chunks blur), self-contained meaning (tiny chunks lose context), the generation model's context budget (chunks retrieved × size + prompt + answer), the document's natural units, and the kind of questions asked. Bigger context windows raise the ceilings but don't fix blurry vectors; evaluation decides the final size.
 
-**Chunker (`npm run chunk:book`, `src/chunkBook.ts`):** reads `out/book.clean.json` and the figure descriptions, writes `out/chunks.json`. Docling ships chunkers (the hybrid one is the RAG default), but they only read Docling's own format and would lose our cleanup, so we apply the same rules to our records:
+**Chunker (`npm run chunk:book`, `src/ingestion/chunkBook.ts`):** reads `out/book.clean.json` and the figure descriptions, writes `out/chunks.json`. Docling ships chunkers (the hybrid one is the RAG default), but they only read Docling's own format and would lose our cleanup, so we apply the same rules to our records:
 
 1. Never cross a section: one heading path per chunk.
 2. Fill up to 400 tokens.

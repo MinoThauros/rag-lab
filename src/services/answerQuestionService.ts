@@ -2,21 +2,14 @@
 // ask Qwen to answer only from them, citing sources. With a conversation context,
 // the rolling summary and the recent turns are included so follow-ups make sense.
 import OpenAI from "openai";
-import { qwen, QWEN_MODEL } from "./qwen.ts";
-import { retrieve, type RetrievalScope, type RetrievedChunk } from "./retrieve.ts";
+import { ANSWER_SYSTEM_PROMPT } from "../constants/prompts.ts";
+import { qwen, QWEN_MODEL } from "../lib/qwen.ts";
+import { retrieve, type RetrievalScope, type RetrievedChunk } from "../lib/retrieval/retrieve.ts";
+import type { ConversationContext } from "../types/conversation.ts";
+import { extractCitations } from "../utils/citations.ts";
 
 const TOP_K = 5;
 const SOURCE_TOKEN_BUDGET = 3500; // of Qwen's 8,192: leaves room for summary, recent turns, answer
-
-const SYSTEM = [
-  "You answer questions about the user's documents.",
-  "Use only the numbered sources provided. Cite them inline like [1] or [2][3].",
-  'If the sources do not contain the answer, say: "I don\'t know from the provided sources."',
-  "Write mathematics in LaTeX.",
-].join(" ");
-
-export type Turn = { role: "user" | "assistant"; content: string };
-export type ConversationContext = { summary: string; recent: Turn[] };
 
 export type Answer = {
   text: string;
@@ -26,7 +19,7 @@ export type Answer = {
   answerTokens?: number;
 };
 
-export async function answer(
+export async function answerQuestionService(
   question: string,
   onToken: (token: string) => void,
   scope: RetrievalScope,
@@ -44,8 +37,8 @@ export async function answer(
   }
 
   const system = context?.summary
-    ? `${SYSTEM}\n\nSummary of the conversation so far:\n${context.summary}`
-    : SYSTEM;
+    ? `${ANSWER_SYSTEM_PROMPT}\n\nSummary of the conversation so far:\n${context.summary}`
+    : ANSWER_SYSTEM_PROMPT;
 
   const user = [
     "Sources:",
@@ -79,14 +72,10 @@ export async function answer(
     if (part.usage) usage = part.usage;
   }
 
-  const cited = [...new Set([...text.matchAll(/\[(\d+)\]/g)].map((m) => Number(m[1])))]
-    .filter((n) => n >= 1 && n <= sources.length)
-    .sort((a, b) => a - b);
-
   return {
     text,
     sources,
-    cited,
+    cited: extractCitations(text, sources.length),
     promptTokens: usage?.prompt_tokens,
     answerTokens: usage?.completion_tokens,
   };

@@ -1,8 +1,8 @@
 // Hybrid retrieval: vector similarity + keyword match, merged with reciprocal
 // rank fusion (RRF), via the hybrid_search() SQL function (see migrations).
 // Searches all of the owner's documents, or only `documentIds` when given.
-import { embed } from "./embedding.ts";
-import { supabase } from "./supabase.ts";
+import { embed } from "../embedding.ts";
+import { supabase } from "../supabase.ts";
 
 export type RetrievedChunk = {
   id: string;

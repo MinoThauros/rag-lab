@@ -156,10 +156,21 @@ The book PDF isn't in the repo; download it from the authors' site ([mml-book.co
 ## Repository
 
 ```
-src/        pipeline (clean, chunk, load, embed, retrieve, answer) and interfaces (chat, web API)
-web/        React + shadcn + KaTeX front end
-supabase/   migrations: pgvector, documents/chunks, indexes + RLS, hybrid_search(), fts trigger
-docs/       research report on 2026 RAG practice, and the lab journal with every step and number
+src/
+  app.ts          Express API: mounts the routers
+  routes/         auth, conversations, ask (streaming)
+  middleware/     requireAuth: Supabase session from httpOnly cookies → req.user
+  services/       answerQuestionService (retrieve + generate), askInConversationService (memory turn)
+  lib/            Supabase, Qwen, embeddings, hybrid retrieval, conversation store, rewrite, summary
+  constants/      prompts
+  utils/          pure helpers (transcript, citations)
+  types/
+  ingestion/      clean → chunk → load → embed
+  cli/            terminal tools: ask, search, chat
+  explorations/   first experiments (raw PDF reading, Markdown cleaning)
+web/              React + shadcn + KaTeX front end
+supabase/         migrations: pgvector, documents/chunks, hybrid_search(), fts trigger, tenancy, conversations
+docs/             research report on 2026 RAG practice, and the lab journal with every step and number
 ```
 
 The full lab journal, with what was tried, what failed and why, is in [docs/journal.md](docs/journal.md).

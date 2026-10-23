@@ -4,17 +4,8 @@
 // which can't send an Authorization header.
 import type { CookieOptions, NextFunction, Request, Response } from "express";
 import type { Session } from "@supabase/supabase-js";
-import { authClient } from "./supabase.ts";
-
-export type AuthUser = { id: string; email?: string };
-
-declare global {
-  namespace Express {
-    interface Request {
-      user?: AuthUser;
-    }
-  }
-}
+import { authClient } from "../lib/supabase.ts";
+import "../types/express.d.ts";
 
 const COOKIE_MAX_AGE = 7 * 24 * 60 * 60 * 1000;
 const cookieOptions: CookieOptions = {
