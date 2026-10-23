@@ -24,7 +24,11 @@ const check = ({ error }: { error: { message: string } | null }, step: string) =
 };
 
 check(await supabase.from("documents").delete().eq("id", DOCUMENT.id), "delete document");
-check(await supabase.from("documents").insert(DOCUMENT), "insert document");
+// The document belongs to RAG_OWNER_ID (ingestion is an admin script).
+check(
+  await supabase.from("documents").insert({ ...DOCUMENT, owner_id: process.env.RAG_OWNER_ID }),
+  "insert document"
+);
 
 for (let start = 0; start < chunks.length; start += BATCH_SIZE) {
   const rows = chunks.slice(start, start + BATCH_SIZE).map((c) => ({
