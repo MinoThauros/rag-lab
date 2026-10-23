@@ -24,7 +24,7 @@ det(A − λI) = det([4−λ  2; 1  3−λ]) = (4−λ)(3−λ) − 2 = λ² −
 ## Architecture
 
 ```mermaid
-flowchart LR
+flowchart TB
   subgraph GPU["GPU node · RTX 5070 Ti 16 GB · Ubuntu · Tailscale"]
     D["Docling<br/>layout + formula models"]
     V["Qwen3-VL-4B (vLLM)<br/>figure descriptions"]
