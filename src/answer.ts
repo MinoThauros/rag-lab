@@ -1,23 +1,22 @@
-// Answers one question from the book: retrieve the best chunks, then ask Qwen to
-// answer only from them, citing sources. Shared by ask.ts (one question) and
-// chat.ts (interactive).
+// Answers one question: retrieve the best chunks from the owner's documents, then
+// ask Qwen to answer only from them, citing sources. With a conversation context,
+// the rolling summary and the recent turns are included so follow-ups make sense.
 import OpenAI from "openai";
-import { retrieve, type RetrievedChunk } from "./retrieve.ts";
+import { qwen, QWEN_MODEL } from "./qwen.ts";
+import { retrieve, type RetrievalScope, type RetrievedChunk } from "./retrieve.ts";
 
 const TOP_K = 5;
-const SOURCE_TOKEN_BUDGET = 4000; // of Qwen's 8,192: leaves room for instructions, question, answer
-
-const qwen = new OpenAI({
-  baseURL: process.env.QWEN_BASE_URL, // http://home5070ti:8000/v1, over Tailscale
-  apiKey: "none", // vLLM has no API key yet
-});
+const SOURCE_TOKEN_BUDGET = 3500; // of Qwen's 8,192: leaves room for summary, recent turns, answer
 
 const SYSTEM = [
-  'You answer questions about the book "Mathematics for Machine Learning".',
+  "You answer questions about the user's documents.",
   "Use only the numbered sources provided. Cite them inline like [1] or [2][3].",
   'If the sources do not contain the answer, say: "I don\'t know from the provided sources."',
   "Write mathematics in LaTeX.",
 ].join(" ");
+
+export type Turn = { role: "user" | "assistant"; content: string };
+export type ConversationContext = { summary: string; recent: Turn[] };
 
 export type Answer = {
   text: string;
@@ -29,9 +28,11 @@ export type Answer = {
 
 export async function answer(
   question: string,
-  onToken: (token: string) => void
+  onToken: (token: string) => void,
+  scope: RetrievalScope,
+  context?: ConversationContext
 ): Promise<Answer> {
-  const retrieved = await retrieve(question, TOP_K);
+  const retrieved = await retrieve(question, TOP_K, scope);
 
   // Keep sources in rank order until the token budget is reached.
   const sources: RetrievedChunk[] = [];
@@ -42,6 +43,10 @@ export async function answer(
     used += chunk.tokens;
   }
 
+  const system = context?.summary
+    ? `${SYSTEM}\n\nSummary of the conversation so far:\n${context.summary}`
+    : SYSTEM;
+
   const user = [
     "Sources:",
     ...sources.map((s, i) => `[${i + 1}] (${s.section}, page ${s.pages.join("–")})\n${s.text}`),
@@ -49,9 +54,10 @@ export async function answer(
   ].join("\n\n");
 
   const stream = await qwen.chat.completions.create({
-    model: process.env.QWEN_MODEL!, // Qwen/Qwen3-8B-FP8
+    model: QWEN_MODEL,
     messages: [
-      { role: "system", content: SYSTEM },
+      { role: "system", content: system },
+      ...(context?.recent ?? []), // recent turns verbatim, as real chat messages
       { role: "user", content: user },
     ],
     temperature: 0.2,
