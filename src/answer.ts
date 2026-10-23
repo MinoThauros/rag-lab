@@ -2,7 +2,6 @@
 // answer only from them, citing sources. Shared by ask.ts (one question) and
 // chat.ts (interactive).
 import OpenAI from "openai";
-import pg from "pg";
 import { retrieve, type RetrievedChunk } from "./retrieve.ts";
 
 const TOP_K = 5;
@@ -29,11 +28,10 @@ export type Answer = {
 };
 
 export async function answer(
-  db: pg.Pool | pg.Client,
   question: string,
   onToken: (token: string) => void
 ): Promise<Answer> {
-  const retrieved = await retrieve(db, question, TOP_K);
+  const retrieved = await retrieve(question, TOP_K);
 
   // Keep sources in rank order until the token budget is reached.
   const sources: RetrievedChunk[] = [];

@@ -18,17 +18,16 @@
     "@types/express": "^5.0.6",
     "@types/mdast": "^4.0.4",
     "@types/node": "^20.19.43",
-    "@types/pg": "^8.23.1",
     "nodemon": "^3.1.14",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.52.0",
     "express": "^5.3.0",
     "js-tiktoken": "^1.0.21",
     "mdast-util-to-string": "^4.0.0",
     "openai": "^6.49.0",
-    "pg": "^8.23.1",
     "remark-parse": "^11.0.0",
     "remark-stringify": "^11.0.0",
     "unified": "^11.0.5",

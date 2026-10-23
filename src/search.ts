@@ -1,18 +1,11 @@
 // Shows what hybrid retrieval returns for a question, with both ranks.
 // Usage: npm run search -- "what is an eigenvalue?"
-import pg from "pg";
 import { retrieve } from "./retrieve.ts";
 
 const question = process.argv.slice(2).join(" ");
 const TOP_K = 5; // results shown
 
-const db = new pg.Client({
-  connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false },
-});
-await db.connect();
-const rows = await retrieve(db, question, TOP_K);
-await db.end();
+const rows = await retrieve(question, TOP_K);
 
 console.log(`Q: ${question}`);
 console.table(

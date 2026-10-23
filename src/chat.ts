@@ -2,14 +2,7 @@
 // Each question is answered on its own: there's no conversation memory yet.
 import { createInterface } from "node:readline";
 import { stdin as input, stdout as output } from "node:process";
-import pg from "pg";
 import { answer, type Answer } from "./answer.ts";
-
-const db = new pg.Client({
-  connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false },
-});
-await db.connect(); // one connection for the whole session
 
 const rl = createInterface({ input, output });
 console.log("Mathematics for Machine Learning — ask a question (/sources, /quit)\n");
@@ -42,7 +35,7 @@ for await (const raw of rl) {
     continue;
   }
 
-  last = await answer(db, line, (token) => output.write(token)); // streams the answer
+  last = await answer(line, (token) => output.write(token)); // streams the answer
   output.write("\n\n");
   for (const n of last.cited) console.log(`  [${n}] ${sourceLine(last.sources[n - 1])}`);
   console.log(`  (${last.promptTokens} prompt tokens · ${last.answerTokens} answer tokens)\n`);
@@ -50,4 +43,3 @@ for await (const raw of rl) {
 }
 
 rl.close();
-await db.end();

@@ -2,16 +2,9 @@
 //   GET /api/ask?q=…  →  event: token  (repeated)  then  event: done  (sources, usage)
 // Usage: npm run web:api   (listens on 127.0.0.1:3100, local only)
 import express from "express";
-import pg from "pg";
 import { answer } from "./answer.ts";
 
 const PORT = 3100;
-
-// pg's built-in pool: concurrent questions (two tabs) each get a connection.
-const db = new pg.Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false },
-});
 
 const app = express();
 
@@ -32,7 +25,7 @@ app.get("/api/ask", async (req, res) => {
     res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
 
   try {
-    const result = await answer(db, question, (token) => send("token", token));
+    const result = await answer(question, (token) => send("token", token));
     send("done", {
       cited: result.cited,
       sources: result.sources.map(({ section, pages, kind, semantic_rank, keyword_rank }) => ({
@@ -47,4 +40,11 @@ app.get("/api/ask", async (req, res) => {
   res.end();
 });
 
-app.listen(PORT, "127.0.0.1", () => console.log(`API on http://127.0.0.1:${PORT}`));
+app.listen(PORT, "127.0.0.1", (error) => {
+  if (error) {
+    // Express 5 reports listen errors here (e.g. EADDRINUSE); don't claim to be running.
+    console.error(`Could not start the API on port ${PORT}: ${error.message}`);
+    process.exit(1);
+  }
+  console.log(`API on http://127.0.0.1:${PORT}`);
+});
