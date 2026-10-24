@@ -15,7 +15,7 @@ import { QWEN_MODEL } from "../lib/qwen.ts";
 import { retrieve } from "../lib/retrieval/retrieve.ts";
 import type { RewriteCase } from "../types/rewriteEval.ts";
 import type { ConversationContext } from "../types/conversation.ts";
-import { firstHitRank, isUnchanged, rewriteHitsTerms } from "../utils/rewriteEval.ts";
+import { EVAL_DOCUMENT_IDS, firstHitRank, isUnchanged, rewriteHitsTerms } from "../utils/rewriteEval.ts";
 
 const CASES = "evals/rewrite/cases.jsonl";
 const TOP_K = 5; // what the answer step sees
@@ -46,7 +46,7 @@ const rewriterName = args.rewriter === "qwen" ? QWEN_MODEL : args.rewriter!;
 const rewrite = args.rewriter === "qwen" ? rewriteQuestion : rewriteWithFoundry;
 
 const rankFor = async (c: RewriteCase, query: string) =>
-  firstHitRank(c, (await retrieve(query, TOP_K, { ownerId })).map((chunk) => chunk.section));
+  firstHitRank(c, (await retrieve(query, TOP_K, { ownerId, documentIds: EVAL_DOCUMENT_IDS })).map((chunk) => chunk.section));
 
 type RunResult = { rewrite: string; terms: boolean; unchanged: boolean; rank: number | null };
 type CaseResult = { case: RewriteCase; rawRank: number | null; referenceRank: number | null; runs: RunResult[] };
