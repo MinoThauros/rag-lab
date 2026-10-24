@@ -1,6 +1,10 @@
 // Pure scoring for the rewrite eval.
 import type { RewriteCase } from "../types/rewriteEval.ts";
 
+// The eval searches only its own book, so other documents in the owner's account
+// don't change its results.
+export const EVAL_DOCUMENT_IDS = ["maths-for-ml"];
+
 const has = (text: string, term: string) => text.toLowerCase().includes(term.toLowerCase());
 
 // The rewrite names the right topic(s) and doesn't drag in the ones it shouldn't.

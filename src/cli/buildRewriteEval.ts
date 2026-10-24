@@ -16,6 +16,7 @@ import { answerQuestionService } from "../services/answerQuestionService.ts";
 import { WINDOW_EXCHANGES } from "../services/askInConversationService.ts";
 import type { ConversationContext } from "../types/conversation.ts";
 import type { DraftCase, RewriteCase } from "../types/rewriteEval.ts";
+import { EVAL_DOCUMENT_IDS } from "../utils/rewriteEval.ts";
 
 const DRAFTS = "evals/rewrite/cases.draft.jsonl";
 const CASES = "evals/rewrite/cases.jsonl";
@@ -35,7 +36,7 @@ const readJsonl = async <T>(path: string): Promise<T[]> =>
 async function playConversation(userTurns: DraftCase["history"]): Promise<ConversationContext> {
   const context: ConversationContext = { summary: "", recent: [] };
   for (const turn of userTurns) {
-    const answer = await answerQuestionService(turn.standalone ?? turn.user, () => {}, { ownerId }, {
+    const answer = await answerQuestionService(turn.standalone ?? turn.user, () => {}, { ownerId, documentIds: EVAL_DOCUMENT_IDS }, {
       summary: context.summary,
       recent: [...context.recent],
     });
