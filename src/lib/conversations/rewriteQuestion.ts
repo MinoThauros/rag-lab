@@ -5,17 +5,17 @@ import type { ConversationContext } from "../../types/conversation.ts";
 import { formatTranscript } from "../../utils/transcript.ts";
 import { complete } from "../qwen.ts";
 
+// The user message the rewriter sees; shared with the eval's reference model.
+export const rewriteInput = (context: ConversationContext, question: string) =>
+  [
+    context.summary && `Summary of the conversation so far:\n${context.summary}`,
+    `Recent conversation:\n${formatTranscript(context.recent)}`,
+    `Latest message: ${question}`,
+  ]
+    .filter(Boolean)
+    .join("\n\n");
+
 export async function rewriteQuestion(context: ConversationContext, question: string): Promise<string> {
-  const rewritten = await complete(
-    REWRITE_SYSTEM_PROMPT,
-    [
-      context.summary && `Summary of the conversation so far:\n${context.summary}`,
-      `Recent conversation:\n${formatTranscript(context.recent)}`,
-      `Latest message: ${question}`,
-    ]
-      .filter(Boolean)
-      .join("\n\n"),
-    100
-  );
+  const rewritten = await complete(REWRITE_SYSTEM_PROMPT, rewriteInput(context, question), 100);
   return rewritten || question;
 }

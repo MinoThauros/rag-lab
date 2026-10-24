@@ -1,0 +1,2646 @@
+{
+  "rewriter": "Qwen/Qwen3-8B-FP8",
+  "runs": 3,
+  "cases": [
+    {
+      "id": "pronoun-01",
+      "message": "how do I compute it for a 3x3 matrix?",
+      "reference": "How do I compute the determinant for a 3x3 matrix?",
+      "rawRank": 1,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "How do I compute the determinant of a 3x3 matrix?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "How do I compute the determinant of a 3x3 matrix?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "How do I compute the determinant of a 3x3 matrix?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "pronoun-02",
+      "message": "how is it different from the eigendecomposition?",
+      "reference": "How is the singular value decomposition different from the eigendecomposition?",
+      "rawRank": 1,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "How is the singular value decomposition different from the eigendecomposition?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "How is the singular value decomposition different from the eigendecomposition?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "How is the singular value decomposition different from the eigendecomposition?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "pronoun-03",
+      "message": "why is it so widely used in machine learning?",
+      "reference": "Why is the Gaussian distribution so widely used in machine learning?",
+      "rawRank": 2,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "Why is the Gaussian distribution so widely used in machine learning?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "Why is the Gaussian distribution so widely used in machine learning?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "Why is the Gaussian distribution so widely used in machine learning?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "pronoun-04",
+      "message": "how does it relate to the chain rule?",
+      "reference": "How does backpropagation relate to the chain rule?",
+      "rawRank": 1,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "How does backpropagation relate to the chain rule?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "How does backpropagation relate to the chain rule?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "How does backpropagation relate to the chain rule?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "pronoun-05",
+      "message": "when would I need one?",
+      "reference": "When would I need to use a Lagrange multiplier?",
+      "rawRank": null,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "When would I need to use a Lagrange multiplier?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        },
+        {
+          "rewrite": "When would I need to use a Lagrange multiplier?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        },
+        {
+          "rewrite": "When would I need to use a Lagrange multiplier?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        }
+      ]
+    },
+    {
+      "id": "pronoun-06",
+      "message": "can you give an example of one?",
+      "reference": "Can you give an example of a kernel function used in support vector machines?",
+      "rawRank": null,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "Can you give an example of a kernel function used in support vector machines?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 3
+        },
+        {
+          "rewrite": "Can you give an example of a kernel function used in support vector machines?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 3
+        },
+        {
+          "rewrite": "Can you give an example of a kernel function used in support vector machines?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 3
+        }
+      ]
+    },
+    {
+      "id": "pronoun-07",
+      "message": "does it always converge?",
+      "reference": "Does the EM algorithm always converge?",
+      "rawRank": null,
+      "referenceRank": 2,
+      "runs": [
+        {
+          "rewrite": "Does the EM algorithm always converge?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 2,
+          "bothRank": 2
+        },
+        {
+          "rewrite": "Does the EM algorithm always converge?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 2,
+          "bothRank": 2
+        },
+        {
+          "rewrite": "Does the EM algorithm always converge?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 2,
+          "bothRank": 2
+        }
+      ]
+    },
+    {
+      "id": "pronoun-08",
+      "message": "what kind of matrix does it require?",
+      "reference": "What kind of matrix does the Cholesky decomposition require?",
+      "rawRank": null,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "What kind of matrix does the Cholesky decomposition require?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": null
+        },
+        {
+          "rewrite": "What kind of matrix does the Cholesky decomposition require?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": null
+        },
+        {
+          "rewrite": "What kind of matrix does the Cholesky decomposition require?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": null
+        }
+      ]
+    },
+    {
+      "id": "implicit-01",
+      "message": "do you have an example?",
+      "reference": "Do you have an example of how to find the eigenvalues of a 2×2 matrix?",
+      "rawRank": null,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "Do you have an example of finding eigenvalues for a 2x2 matrix?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        },
+        {
+          "rewrite": "Do you have an example of finding eigenvalues for a 2x2 matrix?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        },
+        {
+          "rewrite": "Do you have an example of finding eigenvalues for a 2x2 matrix?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        }
+      ]
+    },
+    {
+      "id": "implicit-02",
+      "message": "what about with momentum?",
+      "reference": "How does gradient descent work with momentum?",
+      "rawRank": 1,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "What about gradient descent with momentum?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What about gradient descent with momentum?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What about gradient descent with momentum?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "implicit-03",
+      "message": "and from the projection perspective?",
+      "reference": "How is PCA derived from the projection perspective?",
+      "rawRank": 1,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "What is the derivation of PCA from the projection perspective?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What is the derivation of PCA from the projection perspective?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What is the derivation of PCA from the projection perspective?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "implicit-04",
+      "message": "and the MAP version?",
+      "reference": "What is the maximum a posteriori (MAP) version of maximum likelihood estimation?",
+      "rawRank": 2,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "What is the maximum a posteriori (MAP) version of maximum likelihood estimation?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What is the maximum a posteriori (MAP) version of maximum likelihood estimation?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What is the maximum a posteriori (MAP) version of maximum likelihood estimation?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "implicit-05",
+      "message": "why do we need it?",
+      "reference": "Why do we need the Jacobian?",
+      "rawRank": null,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "Why is the Jacobian needed?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        },
+        {
+          "rewrite": "Why is the Jacobian needed?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        },
+        {
+          "rewrite": "Why is the Jacobian needed?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        }
+      ]
+    },
+    {
+      "id": "implicit-06",
+      "message": "properties?",
+      "reference": "What are the properties of an inner product?",
+      "rawRank": null,
+      "referenceRank": 2,
+      "runs": [
+        {
+          "rewrite": "What are the properties of an inner product?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 2,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What are the properties of an inner product?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 2,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What are the properties of an inner product?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 2,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "implicit-07",
+      "message": "and the dual?",
+      "reference": "What is the dual formulation of the support vector machine (SVM)?",
+      "rawRank": 1,
+      "referenceRank": 3,
+      "runs": [
+        {
+          "rewrite": "What is the dual of the support vector machine?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What is the dual formulation of the support vector machine?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 3,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What is the dual formulation of the support vector machine?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 3,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "implicit-08",
+      "message": "examples?",
+      "reference": "Can you give examples of convex functions?",
+      "rawRank": null,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "Can you provide examples of convex functions?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 2,
+          "bothRank": 2
+        },
+        {
+          "rewrite": "Can you provide examples of convex functions?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 2,
+          "bothRank": 2
+        },
+        {
+          "rewrite": "Can you provide examples of convex functions?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 2,
+          "bothRank": 2
+        }
+      ]
+    },
+    {
+      "id": "referents-01",
+      "message": "how is the first one related to eigenvalues?",
+      "reference": "How is the determinant of a matrix related to its eigenvalues?",
+      "rawRank": 1,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "How is the determinant of a matrix related to its eigenvalues?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "How is the determinant of a matrix related to its eigenvalues?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "How is the determinant of a matrix related to its eigenvalues?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "referents-02",
+      "message": "which of the two is induced by the dot product?",
+      "reference": "Which of the two norms, the L1 norm or the Euclidean norm, is induced by the dot product?",
+      "rawRank": 1,
+      "referenceRank": 2,
+      "runs": [
+        {
+          "rewrite": "Which of the L1 norm or the Euclidean norm is induced by the dot product?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 2,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "Which of the L1 norm or the Euclidean norm is induced by the dot product?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 2,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "Which of the L1 norm or the Euclidean norm is induced by the dot product?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 2,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "referents-03",
+      "message": "how is the latter used to fit the former?",
+      "reference": "How is the EM algorithm used to fit a Gaussian mixture model?",
+      "rawRank": null,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "How is the EM algorithm used to fit a Gaussian mixture model?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        },
+        {
+          "rewrite": "How is the EM algorithm used to fit a Gaussian mixture model?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        },
+        {
+          "rewrite": "How is the EM algorithm used to fit a Gaussian mixture model?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        }
+      ]
+    },
+    {
+      "id": "referents-04",
+      "message": "how is the second one used in the Taylor series?",
+      "reference": "How is the Hessian matrix used in a Taylor series expansion?",
+      "rawRank": 5,
+      "referenceRank": 2,
+      "runs": [
+        {
+          "rewrite": "How is the Hessian used in the Taylor series?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        },
+        {
+          "rewrite": "How is the Hessian used in the Taylor series?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        },
+        {
+          "rewrite": "How is the Hessian used in the Taylor series?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        }
+      ]
+    },
+    {
+      "id": "referents-05",
+      "message": "how do you combine them to get Bayes' theorem?",
+      "reference": "How do you combine the sum rule and the product rule in probability to derive Bayes' theorem?",
+      "rawRank": 1,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "How do the sum rule and product rule combine to derive Bayes' theorem?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "How do the sum rule and product rule combine to derive Bayes' theorem?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "How do the sum rule and product rule combine to derive Bayes' theorem?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "referents-06",
+      "message": "how do you compute the latter?",
+      "reference": "How do you compute the rank of a matrix?",
+      "rawRank": null,
+      "referenceRank": null,
+      "runs": [
+        {
+          "rewrite": "How do you compute the dimension of the null space of a matrix?",
+          "terms": false,
+          "unchanged": false,
+          "rank": null,
+          "bothRank": null
+        },
+        {
+          "rewrite": "How do you compute the dimension of the null space of a matrix?",
+          "terms": false,
+          "unchanged": false,
+          "rank": null,
+          "bothRank": null
+        },
+        {
+          "rewrite": "How do you compute the dimension of the null space of a matrix?",
+          "terms": false,
+          "unchanged": false,
+          "rank": null,
+          "bothRank": null
+        }
+      ]
+    },
+    {
+      "id": "referents-07",
+      "message": "does the first one preserve lengths like the second?",
+      "reference": "Does an orthogonal projection preserve vector lengths like a rotation matrix does?",
+      "rawRank": null,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "Does the orthogonal projection preserve lengths like the rotation matrix?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "Does the orthogonal projection preserve lengths like the rotation matrix?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "Does the orthogonal projection preserve lengths like the rotation matrix?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "referents-08",
+      "message": "how does the second one change when I scale the variable?",
+      "reference": "How does the variance of a random variable change when the variable is scaled?",
+      "rawRank": null,
+      "referenceRank": 4,
+      "runs": [
+        {
+          "rewrite": "How does the variance of a random variable change when the variable is scaled?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 4,
+          "bothRank": null
+        },
+        {
+          "rewrite": "How does the variance of a random variable change when the variable is scaled?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 4,
+          "bothRank": null
+        },
+        {
+          "rewrite": "How does the variance of a random variable change when the variable is scaled?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 4,
+          "bothRank": null
+        }
+      ]
+    },
+    {
+      "id": "topic-01",
+      "message": "What is a probability distribution?",
+      "reference": "What is a probability distribution?",
+      "rawRank": 2,
+      "referenceRank": 2,
+      "runs": [
+        {
+          "rewrite": "What is a probability distribution?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 2,
+          "bothRank": 2
+        },
+        {
+          "rewrite": "What is a probability distribution?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 2,
+          "bothRank": 2
+        },
+        {
+          "rewrite": "What is a probability distribution?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 2,
+          "bothRank": 2
+        }
+      ]
+    },
+    {
+      "id": "topic-02",
+      "message": "Explain the chain rule for partial derivatives.",
+      "reference": "Explain the chain rule for partial derivatives.",
+      "rawRank": 1,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "Explain the chain rule for partial derivatives.",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "Explain the chain rule for partial derivatives.",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "Explain the chain rule for partial derivatives.",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "topic-03",
+      "message": "What is a directed graphical model?",
+      "reference": "What is a directed graphical model?",
+      "rawRank": 1,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "What is a directed graphical model?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What is a directed graphical model?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What is a directed graphical model?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "topic-04",
+      "message": "How does Bayes' theorem work?",
+      "reference": "How does Bayes' theorem work?",
+      "rawRank": 2,
+      "referenceRank": 2,
+      "runs": [
+        {
+          "rewrite": "How does Bayes' theorem work in the context of the documents?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "How does Bayes' theorem work in the context of the documents?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "How does Bayes' theorem work in the context of the documents?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "topic-05",
+      "message": "What is empirical risk minimization?",
+      "reference": "What is empirical risk minimization?",
+      "rawRank": 1,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "What is empirical risk minimization?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What is empirical risk minimization?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What is empirical risk minimization?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "topic-06",
+      "message": "Tell me about the exponential family.",
+      "reference": "What is the exponential family?",
+      "rawRank": 1,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "What is the exponential family?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What is the exponential family?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What is the exponential family?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "topic-07",
+      "message": "ok now, Taylor series?",
+      "reference": "What is the Taylor series?",
+      "rawRank": 1,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "What is the Taylor series?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What is the Taylor series?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What is the Taylor series?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "topic-08",
+      "message": "What is an affine space?",
+      "reference": "What is an affine space?",
+      "rawRank": 1,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "What is an affine space?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What is an affine space?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What is an affine space?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "standalone-01",
+      "message": "What is the characteristic polynomial of a matrix?",
+      "reference": "What is the characteristic polynomial of a matrix?",
+      "rawRank": 1,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "What is the characteristic polynomial of a matrix?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What is the characteristic polynomial of a matrix?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What is the characteristic polynomial of a matrix?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "standalone-02",
+      "message": "What is the step size in gradient descent and how is it chosen?",
+      "reference": "What is the step size in gradient descent and how is it chosen?",
+      "rawRank": 1,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "What is the step size in gradient descent and how is it chosen?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What is the step size in gradient descent and how is it chosen?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What is the step size in gradient descent and how is it chosen?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "standalone-03",
+      "message": "What is the marginal distribution of a multivariate Gaussian?",
+      "reference": "What is the marginal distribution of a multivariate Gaussian?",
+      "rawRank": 1,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "What is the marginal distribution of a multivariate Gaussian?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What is the marginal distribution of a multivariate Gaussian?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What is the marginal distribution of a multivariate Gaussian?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "standalone-04",
+      "message": "How is the Eckart-Young theorem used for low-rank approximation?",
+      "reference": "How is the Eckart-Young theorem used for low-rank approximation?",
+      "rawRank": 1,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "How is the Eckart-Young theorem applied in the context of low-rank approximation using singular value decomposition?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "How is the Eckart-Young theorem applied in the context of low-rank approximation using singular value decomposition?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "How is the Eckart-Young theorem applied in the context of low-rank approximation using singular value decomposition?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "standalone-05",
+      "message": "What is Bayesian linear regression?",
+      "reference": "What is Bayesian linear regression?",
+      "rawRank": 1,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "What is Bayesian linear regression?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What is Bayesian linear regression?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What is Bayesian linear regression?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "standalone-06",
+      "message": "How do you solve a system of linear equations with Gaussian elimination?",
+      "reference": "How do you solve a system of linear equations with Gaussian elimination?",
+      "rawRank": 1,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "How do you solve a system of linear equations using Gaussian elimination?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "How do you solve a system of linear equations using Gaussian elimination?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "How do you solve a system of linear equations using Gaussian elimination?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "standalone-07",
+      "message": "How is PCA done in high dimensions when there are fewer data points than dimensions?",
+      "reference": "How is Principal Component Analysis (PCA) performed in high-dimensional settings when there are fewer data points than dimensions?",
+      "rawRank": 1,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "How is PCA performed in high-dimensional spaces when the number of data points is fewer than the number of dimensions?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "How is PCA performed in high-dimensional settings where the number of data points is fewer than the number of dimensions?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "How is PCA performed in high-dimensional spaces when the number of data points is fewer than the number of dimensions?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "standalone-08",
+      "message": "What is the Gram-Schmidt process?",
+      "reference": "What is the Gram-Schmidt process?",
+      "rawRank": 1,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "What is the Gram-Schmidt process?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What is the Gram-Schmidt process?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What is the Gram-Schmidt process?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "hard-implicit-01",
+      "message": "do you have an example in the book",
+      "reference": "Is there an example in my documents of a matrix with eigenvalue zero?",
+      "rawRank": null,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "Do you have an example in the book of computing eigenvalues for a 2x2 matrix?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        },
+        {
+          "rewrite": "Can you provide an example from the book of a matrix with a zero eigenvalue?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        },
+        {
+          "rewrite": "Can you provide an example from the book of a matrix with a zero eigenvalue?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        }
+      ]
+    },
+    {
+      "id": "hard-implicit-02",
+      "message": "Is there a worked example I can follow?",
+      "reference": "Is there a worked example of computing the singular value decomposition (SVD) of a matrix that I can follow?",
+      "rawRank": null,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "Can you provide a worked example of computing the singular value decomposition?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        },
+        {
+          "rewrite": "Can you provide a worked example of computing the singular value decomposition?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        },
+        {
+          "rewrite": "Can you provide a worked example of computing the singular value decomposition?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        }
+      ]
+    },
+    {
+      "id": "hard-implicit-03",
+      "message": "Can you show me the update equation?",
+      "reference": "Can you show me the update equation for stochastic gradient descent?",
+      "rawRank": null,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "Can you show me the update equation for stochastic gradient descent?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": null
+        },
+        {
+          "rewrite": "Can you show me the update equation for stochastic gradient descent?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": null
+        },
+        {
+          "rewrite": "Can you show me the update equation for stochastic gradient descent?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": null
+        }
+      ]
+    },
+    {
+      "id": "hard-implicit-04",
+      "message": "What are the key steps in practice?",
+      "reference": "What are the key steps for performing PCA in practice from the projection perspective, including centering the data, computing the covariance matrix, determining the optimal subspace \\(U\\), projecting the data, and evaluating the reconstruction error?",
+      "rawRank": 1,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "What are the key steps in practice for performing PCA and determining the optimal subspace $ U $?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What are the key steps in practice for performing PCA to minimize reconstruction error?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What are the key steps in practice for performing PCA to minimize reconstruction error?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "hard-implicit-05",
+      "message": "What does the book say about duality?",
+      "reference": "What does the book say about duality in constrained optimization?",
+      "rawRank": 1,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "What does the book say about duality?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What does the book say about duality?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What does the book say about duality?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "hard-implicit-06",
+      "message": "Is there an example with a computation graph?",
+      "reference": "Can you give an example of reverse-mode automatic differentiation (backpropagation) using a computation graph?",
+      "rawRank": 1,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "Can you provide an example of reverse mode automatic differentiation using a computation graph?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "Can you provide an example of reverse mode automatic differentiation using a computation graph?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "Can you provide an example of reverse mode automatic differentiation using a computation graph?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "hard-pronoun-01",
+      "message": "going back to the mixture model, how are its parameters learned?",
+      "reference": "How are the parameters of a Gaussian mixture model learned?",
+      "rawRank": 1,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "How are the parameters of a mixture model learned?",
+          "terms": false,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "How are the parameters of a mixture model learned?",
+          "terms": false,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "How are the parameters of a mixture model learned?",
+          "terms": false,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "hard-pronoun-02",
+      "message": "why does that matrix need to be positive definite?",
+      "reference": "Why does the covariance matrix \\(\\Sigma\\) in a multivariate Gaussian distribution need to be positive definite?",
+      "rawRank": 1,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "Why does the covariance matrix in a multivariate Gaussian distribution need to be positive definite?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "Why does the covariance matrix in a multivariate Gaussian distribution need to be positive definite?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "Why does the covariance matrix in a multivariate Gaussian distribution need to be positive definite?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "hard-referents-01",
+      "message": "how is it related to them?",
+      "reference": "How is the trace of a matrix related to its determinant and characteristic polynomial?",
+      "rawRank": null,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "How is the trace of a matrix related to the determinant and the characteristic polynomial?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        },
+        {
+          "rewrite": "How is the trace of a matrix related to the determinant and the characteristic polynomial?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        },
+        {
+          "rewrite": "How is the trace of a matrix related to the determinant and the characteristic polynomial?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        }
+      ]
+    },
+    {
+      "id": "hard-referents-02",
+      "message": "does the Cholesky decomposition need them to be positive?",
+      "reference": "Does the Cholesky decomposition require the eigenvalues of a symmetric matrix to be positive?",
+      "rawRank": 1,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "Does the Cholesky decomposition require the matrix to be positive definite?",
+          "terms": false,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "Does the Cholesky decomposition require the matrix to be positive definite?",
+          "terms": false,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "Does the Cholesky decomposition require the matrix to be positive definite?",
+          "terms": false,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "hard-referents-03",
+      "message": "how do the two formulations compare in computational cost?",
+      "reference": "How do the primal and dual support vector machine formulations compare in computational cost?",
+      "rawRank": 2,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "How do the primal and dual support vector machine formulations compare in terms of computational cost?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "How do the primal and dual support vector machine formulations compare in terms of computational cost?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "How do the primal and dual support vector machine formulations compare in terms of computational cost?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "hard-topic-01",
+      "message": "what is a probability distribution?",
+      "reference": "What is a probability distribution?",
+      "rawRank": 2,
+      "referenceRank": 2,
+      "runs": [
+        {
+          "rewrite": "What is a probability distribution?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 2,
+          "bothRank": 2
+        },
+        {
+          "rewrite": "What is a probability distribution?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 2,
+          "bothRank": 2
+        },
+        {
+          "rewrite": "What is a probability distribution?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 2,
+          "bothRank": 2
+        }
+      ]
+    },
+    {
+      "id": "hard-topic-02",
+      "message": "what about classification?",
+      "reference": "How does classification work in the context of Bayesian linear models?",
+      "rawRank": 1,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "What about classification in the context of Bayesian linear regression?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 4,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What about classification in the context of Bayesian linear regression?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 4,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What about classification in the context of Bayesian linear regression?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 4,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "hard-standalone-01",
+      "message": "What does it mean for two random variables to be independent?",
+      "reference": "What does it mean for two random variables to be independent?",
+      "rawRank": 1,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "What does it mean for two random variables to be independent in the context of a multivariate Gaussian distribution?",
+          "terms": false,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What does it mean for two random variables to be independent in the context of a multivariate Gaussian distribution?",
+          "terms": false,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What does it mean for two random variables to be independent in the context of a multivariate Gaussian distribution?",
+          "terms": false,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "hard-standalone-02",
+      "message": "How do you solve a system of linear equations using Gaussian elimination?",
+      "reference": "How do you solve a system of linear equations using Gaussian elimination?",
+      "rawRank": 1,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "How do you solve a system of linear equations using Gaussian elimination?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "How do you solve a system of linear equations using Gaussian elimination?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "How do you solve a system of linear equations using Gaussian elimination?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "hard-implicit-07",
+      "message": "Can you walk me through the example in the book?",
+      "reference": "Can you walk me through the Bayesian linear regression example in the book, including how the Gaussian prior and Gaussian likelihood lead to the Gaussian posterior?",
+      "rawRank": null,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "Can you walk me through the example in the book?",
+          "terms": false,
+          "unchanged": true,
+          "rank": null,
+          "bothRank": null
+        },
+        {
+          "rewrite": "Can you walk me through the example in the book?",
+          "terms": false,
+          "unchanged": true,
+          "rank": null,
+          "bothRank": null
+        },
+        {
+          "rewrite": "Can you walk me through the example in the book?",
+          "terms": false,
+          "unchanged": true,
+          "rank": null,
+          "bothRank": null
+        }
+      ]
+    },
+    {
+      "id": "hard-referents-04",
+      "message": "does it always produce one?",
+      "reference": "Does the Gram-Schmidt process always produce an orthonormal basis?",
+      "rawRank": null,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "Does the Gram-Schmidt process always produce an orthonormal basis?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        },
+        {
+          "rewrite": "Does the Gram-Schmidt process always produce an orthonormal basis?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        },
+        {
+          "rewrite": "Does the Gram-Schmidt process always produce an orthonormal basis?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        }
+      ]
+    },
+    {
+      "id": "hard-topic-03",
+      "message": "How do you compute the gradient of a matrix with respect to a vector?",
+      "reference": "In the context of kernels and Gram matrices in Support Vector Machines, how do you compute the gradient of a matrix with respect to a vector?",
+      "rawRank": 1,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "How do you compute the gradient of a matrix with respect to a vector?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "How do you compute the gradient of a matrix with respect to a vector?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "How do you compute the gradient of a matrix with respect to a vector?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "clarify-01",
+      "message": "no, I meant the one in probability",
+      "reference": "What is the product rule in probability?",
+      "rawRank": null,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "What is the product rule in probability?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": null
+        },
+        {
+          "rewrite": "What is the product rule in probability?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": null
+        },
+        {
+          "rewrite": "What is the product rule in probability?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": null
+        }
+      ]
+    },
+    {
+      "id": "ambig-01",
+      "message": "how do I compute its kernel?",
+      "reference": "How do I compute the kernel of a linear mapping?",
+      "rawRank": 2,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "How do I compute the kernel of a linear mapping?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "How do I compute the kernel of a linear mapping?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "How do I compute the kernel of a linear mapping?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "assistantref-01",
+      "message": "can you walk me through that expansion method you mentioned?",
+      "reference": "Can you walk me through the Laplace expansion method for computing the determinant of a matrix?",
+      "rawRank": null,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "Can you walk me through the Laplace expansion method for computing the determinant of a matrix?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 3
+        },
+        {
+          "rewrite": "Can you walk me through the Laplace expansion method for computing the determinant of a matrix?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 3
+        },
+        {
+          "rewrite": "Can you walk me through the Laplace expansion method for computing the determinant of a matrix?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 3
+        }
+      ]
+    },
+    {
+      "id": "standalone-09",
+      "message": "What is the trace of a matrix and how is it related to its eigenvalues?",
+      "reference": "What is the trace of a matrix and how is it related to its eigenvalues?",
+      "rawRank": 1,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "What is the trace of a matrix and how is it related to its eigenvalues?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What is the trace of a matrix and how is it related to its eigenvalues?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What is the trace of a matrix and how is it related to its eigenvalues?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "return-01",
+      "message": "going back to the first one, how is it used for low-rank approximation?",
+      "reference": "How is the singular value decomposition used for low-rank approximation?",
+      "rawRank": 1,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "How is the singular value decomposition used for low-rank approximation?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "How is the singular value decomposition used for low-rank approximation?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "How is the singular value decomposition used for low-rank approximation?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "eigen-pronoun",
+      "message": "is it always a subspace?",
+      "reference": "Is the eigenspace of a square matrix corresponding to a given eigenvalue always a subspace?",
+      "rawRank": null,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "Is the eigenspace of a square matrix always a subspace?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 5
+        },
+        {
+          "rewrite": "Is the eigenspace of a square matrix always a subspace?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 5
+        },
+        {
+          "rewrite": "Is the eigenspace of a square matrix always a subspace?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 5
+        }
+      ]
+    },
+    {
+      "id": "eigen-implicit",
+      "message": "walk me through the example in the book",
+      "reference": "Can you walk me through the example in the book that shows how to compute the eigenvalues and eigenspace of a 2×2 matrix using the characteristic polynomial?",
+      "rawRank": null,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "Walk me through the example in the book of computing eigenvalues for a 2x2 matrix.",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        },
+        {
+          "rewrite": "Walk me through the example in the book of computing eigenvalues for a 2x2 matrix.",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        },
+        {
+          "rewrite": "Walk me through the example in the book of computing eigenvalues for a 2x2 matrix.",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        }
+      ]
+    },
+    {
+      "id": "eigen-referents",
+      "message": "how does the polynomial connect back to my first question?",
+      "reference": "How does the characteristic polynomial connect to computing the eigenvalues of a 2×2 matrix?",
+      "rawRank": null,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "How does the characteristic polynomial connect back to computing the eigenvalues of a matrix?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        },
+        {
+          "rewrite": "How does the characteristic polynomial connect back to computing the eigenvalues of a matrix?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        },
+        {
+          "rewrite": "How does the characteristic polynomial connect back to computing the eigenvalues of a matrix?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        }
+      ]
+    },
+    {
+      "id": "eigen-topic",
+      "message": "What is the chain rule?",
+      "reference": "What is the chain rule?",
+      "rawRank": 1,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "What is the chain rule?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What is the chain rule?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What is the chain rule?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "eigen-standalone",
+      "message": "What is the determinant of a triangular matrix?",
+      "reference": "What is the determinant of a triangular matrix?",
+      "rawRank": 1,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "What is the determinant of a triangular matrix?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What is the determinant of a triangular matrix?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What is the determinant of a triangular matrix?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "constrained-pronoun",
+      "message": "does it always hold?",
+      "reference": "Does weak duality always hold?",
+      "rawRank": null,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "Does weak duality always hold?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        },
+        {
+          "rewrite": "Does weak duality always hold?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        },
+        {
+          "rewrite": "Does weak duality always hold?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        }
+      ]
+    },
+    {
+      "id": "constrained-implicit",
+      "message": "can you prove the theorem?",
+      "reference": "Can you prove the weak duality theorem?",
+      "rawRank": null,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "Can you prove the weak duality theorem?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        },
+        {
+          "rewrite": "Can you prove the weak duality theorem?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        },
+        {
+          "rewrite": "Can you prove the weak duality theorem?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        }
+      ]
+    },
+    {
+      "id": "constrained-referents",
+      "message": "how is the first method I asked about different from the second?",
+      "reference": "How does the basic method of Lagrange multipliers for equality-constrained optimization differ from the use of Lagrange multipliers for inequality constraints?",
+      "rawRank": null,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "How is the method of gradient descent different from the method of Lagrange multipliers?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        },
+        {
+          "rewrite": "How is the method of gradient descent different from the method of Lagrange multipliers?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        },
+        {
+          "rewrite": "How is the method of gradient descent different from the method of Lagrange multipliers?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        }
+      ]
+    },
+    {
+      "id": "constrained-topic",
+      "message": "Explain the singular value decomposition.",
+      "reference": "What is the singular value decomposition?",
+      "rawRank": 1,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "Explain the singular value decomposition.",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "Explain the singular value decomposition.",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "Explain the singular value decomposition.",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "constrained-standalone",
+      "message": "What is the convex conjugate?",
+      "reference": "What is the convex conjugate?",
+      "rawRank": 1,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "What is the convex conjugate?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What is the convex conjugate?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What is the convex conjugate?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "pca-pronoun",
+      "message": "how do I minimize it?",
+      "reference": "How do I minimize the reconstruction error in Principal Component Analysis (PCA)?",
+      "rawRank": 2,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "How can I minimize the reconstruction error in PCA?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "How can I minimize the reconstruction error in PCA?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "How can I minimize the reconstruction error in PCA?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "pca-implicit",
+      "message": "what are the key steps?",
+      "reference": "What are the key steps in Principal Component Analysis (PCA)?",
+      "rawRank": 1,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "What are the key steps in Principal Component Analysis (PCA)?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What are the key steps in Principal Component Analysis (PCA)?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What are the key steps in Principal Component Analysis (PCA)?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "pca-referents",
+      "message": "how does the first thing I asked about use that matrix?",
+      "reference": "How does the maximum variance perspective of PCA use the data covariance matrix?",
+      "rawRank": null,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "How does the maximum variance perspective use the data covariance matrix?",
+          "terms": false,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        },
+        {
+          "rewrite": "How does the maximum variance perspective use the data covariance matrix?",
+          "terms": false,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        },
+        {
+          "rewrite": "How does the maximum variance perspective use the data covariance matrix?",
+          "terms": false,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        }
+      ]
+    },
+    {
+      "id": "pca-topic",
+      "message": "How does the EM algorithm work?",
+      "reference": "How does the EM algorithm work in probabilistic PCA (PPCA)?",
+      "rawRank": 2,
+      "referenceRank": 2,
+      "runs": [
+        {
+          "rewrite": "How does the EM algorithm work in the context of probabilistic PCA?",
+          "terms": false,
+          "unchanged": false,
+          "rank": 2,
+          "bothRank": 2
+        },
+        {
+          "rewrite": "How does the EM algorithm work in the context of probabilistic PCA?",
+          "terms": false,
+          "unchanged": false,
+          "rank": 2,
+          "bothRank": 2
+        },
+        {
+          "rewrite": "How does the EM algorithm work in the context of probabilistic PCA?",
+          "terms": false,
+          "unchanged": false,
+          "rank": 2,
+          "bothRank": 2
+        }
+      ]
+    },
+    {
+      "id": "pca-standalone",
+      "message": "What is the Eckart-Young theorem?",
+      "reference": "In the context of Principal Component Analysis (PCA), what is the Eckart-Young theorem?",
+      "rawRank": 1,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "What is the Eckart-Young theorem in the context of Principal Component Analysis?",
+          "terms": false,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What is the Eckart-Young theorem?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What is the Eckart-Young theorem in the context of Principal Component Analysis?",
+          "terms": false,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "probability-pronoun",
+      "message": "is that matrix always symmetric?",
+      "reference": "Is the covariance matrix of a multivariate Gaussian always symmetric?",
+      "rawRank": null,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "Is the covariance matrix of a multivariate Gaussian distribution always symmetric?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": null
+        },
+        {
+          "rewrite": "Is the covariance matrix of a multivariate Gaussian distribution always symmetric?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": null
+        },
+        {
+          "rewrite": "Is the covariance matrix of a multivariate Gaussian distribution always symmetric?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": null
+        }
+      ]
+    },
+    {
+      "id": "probability-implicit",
+      "message": "can you show me the derivation?",
+      "reference": "Can you show me the derivation of the marginal distribution of a multivariate Gaussian, specifically why integrating out \\(y\\) from \\(p(x,y)=\\mathcal{N}\\!\\left(\\begin{bmatrix}\\mu_x\\\\ \\mu_y\\end{bmatrix}, \\begin{bmatrix}\\Sigma_{xx} & \\Sigma_{xy}\\\\ \\Sigma_{yx} & \\Sigma_{yy}\\end{bmatrix}\\right)\\) gives \\(p(x)=\\mathcal{N}(x\\mid \\mu_x,\\Sigma_{xx})\\)?",
+      "rawRank": null,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "Can you show me the derivation of the marginal distribution of a multivariate Gaussian?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        },
+        {
+          "rewrite": "Can you show me the derivation of the marginal distribution of a multivariate Gaussian?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        },
+        {
+          "rewrite": "Can you show me the derivation of the marginal distribution of a multivariate Gaussian?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        }
+      ]
+    },
+    {
+      "id": "probability-referents",
+      "message": "is the first thing I asked about always non-negative?",
+      "reference": "Is the probability density function of a Gaussian distribution always non-negative?",
+      "rawRank": null,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "Is the probability density function always non-negative?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        },
+        {
+          "rewrite": "Is the probability density function always non-negative?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        },
+        {
+          "rewrite": "Is the probability density function always non-negative?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        }
+      ]
+    },
+    {
+      "id": "probability-topic",
+      "message": "ok now, what is a basis?",
+      "reference": "In the context of multivariate Gaussians and covariance matrices, what is a basis?",
+      "rawRank": 2,
+      "referenceRank": null,
+      "runs": [
+        {
+          "rewrite": "What is a basis in the context of probability density functions or multivariate distributions?",
+          "terms": false,
+          "unchanged": false,
+          "rank": null,
+          "bothRank": 3
+        },
+        {
+          "rewrite": "What is a basis in the context of probability density functions or multivariate distributions?",
+          "terms": false,
+          "unchanged": false,
+          "rank": null,
+          "bothRank": 3
+        },
+        {
+          "rewrite": "What is a basis in the context of probability density functions or multivariate distributions?",
+          "terms": false,
+          "unchanged": false,
+          "rank": null,
+          "bothRank": 3
+        }
+      ]
+    },
+    {
+      "id": "probability-standalone",
+      "message": "What is the exponential family?",
+      "reference": "What is the exponential family of probability distributions?",
+      "rawRank": 1,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "What is the exponential family of distributions?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What is the exponential family of distributions?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What is the exponential family of distributions?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "regression-pronoun",
+      "message": "why is it better than a point estimate?",
+      "reference": "Why is using the full posterior distribution in Bayesian linear regression better than using a point estimate of the parameters?",
+      "rawRank": 5,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "Why is Bayesian linear regression better than a point estimate in terms of handling uncertainty and making predictions?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "Why is Bayesian linear regression better than a point estimate in terms of handling uncertainty and making predictions?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "Why is Bayesian linear regression better than a point estimate in terms of handling uncertainty and making predictions?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "regression-implicit",
+      "message": "walk me through the example in the book",
+      "reference": "Can you walk me through the Bayesian linear regression example in the book?",
+      "rawRank": null,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "Can you walk me through the example in the book regarding Bayesian linear regression?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 2
+        },
+        {
+          "rewrite": "Walk me through the example in the book about Bayesian linear regression.",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 3
+        },
+        {
+          "rewrite": "Walk me through the example in the book about Bayesian linear regression.",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 3
+        }
+      ]
+    },
+    {
+      "id": "regression-referents",
+      "message": "compare the last approach with the one before it",
+      "reference": "How does Bayesian linear regression compare with estimating linear regression parameters using maximum likelihood estimation?",
+      "rawRank": null,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "How does Bayesian linear regression compare with maximum likelihood estimation in linear regression?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 3
+        },
+        {
+          "rewrite": "How does Bayesian linear regression compare with maximum likelihood estimation in linear regression?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 3
+        },
+        {
+          "rewrite": "How does Bayesian linear regression compare with maximum likelihood estimation in linear regression?",
+          "terms": true,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 3
+        }
+      ]
+    },
+    {
+      "id": "regression-topic",
+      "message": "How do support vector machines classify data?",
+      "reference": "How do support vector machines classify data?",
+      "rawRank": 1,
+      "referenceRank": 1,
+      "runs": [
+        {
+          "rewrite": "How do support vector machines classify data using the concepts of linear regression and maximum likelihood estimation discussed earlier?",
+          "terms": false,
+          "unchanged": false,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "How do support vector machines classify data?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "How do support vector machines classify data?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        }
+      ]
+    },
+    {
+      "id": "regression-standalone",
+      "message": "What is the maximum a posteriori estimate?",
+      "reference": "In Bayesian linear regression, what is the maximum a posteriori (MAP) estimate?",
+      "rawRank": 1,
+      "referenceRank": 2,
+      "runs": [
+        {
+          "rewrite": "What is the maximum a posteriori estimate?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What is the maximum a posteriori estimate?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        },
+        {
+          "rewrite": "What is the maximum a posteriori estimate?",
+          "terms": true,
+          "unchanged": true,
+          "rank": 1,
+          "bothRank": 1
+        }
+      ]
+    }
+  ]
+}
