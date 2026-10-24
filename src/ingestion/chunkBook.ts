@@ -1,18 +1,20 @@
-// Chunks the cleaned book (out/book.clean.json) into out/chunks.json, following
-// the same rules as Docling's hybrid chunker, applied to our own records:
+// Chunks a cleaned document (its `clean` file in documents.ts) into its `chunks`
+// file, following the same rules as Docling's hybrid chunker, applied to our
+// own records. Usage: npm run chunk:book -- [document id]
 //
 // 1. Never cross a section: a chunk holds records with one heading path.
 // 2. Fill up to a token budget, counted with the embedding model's tokenizer.
-// 3. Never split a paragraph or formula; a paragraph longer than the budget on
-//    its own is split at sentence boundaries.
-// 4. Formulas stay with the text they follow.
-// 5. Each figure is its own chunk: number, caption, and the vision model's
-//    description from out/book.pictures.json when there is one.
+// 3. Never split a paragraph, formula or code block; a paragraph longer than the
+//    budget on its own is split at sentence boundaries, a code block at lines.
+// 4. Formulas and code blocks stay with the text they follow.
+// 5. Each figure or table is its own chunk: number, caption, table cells, and
+//    the vision model's description when there is one.
 // 6. Every chunk carries metadata: heading path, pages, keywords, equation numbers.
 // 7. Table-of-contents pages, references and index are left out: they mention
 //    every topic, so they would match every question a little.
 import { readFile, writeFile } from "node:fs/promises";
 import { getEncoding } from "js-tiktoken";
+import { documentFromArgs } from "./documents.ts";
 
 type BBox = { l: number; t: number; r: number; b: number };
 type Matter = "contents" | "front" | "body" | "back";
@@ -37,6 +39,7 @@ type FigureRecord = {
   headingPath: string[];
   figureNumber?: string;
   caption?: string;
+  table?: string;
 };
 type DoclingPicture = {
   prov?: { page_no: number; bbox: BBox }[];
@@ -63,19 +66,17 @@ const countTokens = (text: string) => encoder.encode(text).length;
 
 const SENTENCE_BOUNDARY = /(?<=[.!?])\s+(?=[A-Z(])/;
 
-const clean = JSON.parse(
-  await readFile(new URL("../../out/book.clean.json", import.meta.url), "utf8")
-) as { texts: TextRecord[]; figures: FigureRecord[] };
+const config = documentFromArgs();
+const clean = JSON.parse(await readFile(config.clean, "utf8")) as { texts: TextRecord[]; figures: FigureRecord[] };
 
 const INDEXED_MATTER: Matter[] = ["front", "body"];
 const texts = clean.texts.filter((r) => INDEXED_MATTER.includes(r.matter));
 const figures = clean.figures.filter((f) => INDEXED_MATTER.includes(f.matter));
 
-// Figure descriptions from the picture-description run (a separate Docling
-// conversion), matched to our figures by page and position.
+// Figure descriptions from the vision model (in the Docling output, or a separate
+// picture-description run), matched to our figures by page and position.
 const described = (
-  JSON.parse(await readFile(new URL("../../out/book.pictures.json", import.meta.url), "utf8"))
-    .document.json_content.pictures as DoclingPicture[]
+  JSON.parse(await readFile(config.pictures ?? config.docling, "utf8")).document.json_content.pictures as DoclingPicture[]
 )
   .filter((p) => p.prov?.[0] && p.meta?.description?.text)
   .map((p) => ({ page: p.prov![0].page_no, bbox: p.prov![0].bbox, text: p.meta!.description!.text! }));
@@ -95,11 +96,12 @@ function render(record: TextRecord): string {
     const numbers = record.equationNumbers?.map((n) => ` (${n})`).join("") ?? "";
     return `$$ ${record.text} $$${numbers}`;
   }
+  if (record.type === "code" && config.codeBlocks) return `\`\`\`\n${record.text}\n\`\`\``;
   const notes = record.notes.map((note) => `\nNote: ${note}`).join("");
   return `${record.text}${notes}`;
 }
 
-// --- Units: a paragraph plus the formulas that follow it ----------------------
+// --- Units: a paragraph plus the formulas and code blocks that follow it -------
 
 type Unit = { records: TextRecord[]; body: string };
 
@@ -108,7 +110,8 @@ for (const record of texts) {
   if (record.type === "section_header") continue; // carried by headingPath instead
   const last = units.at(-1);
   const sameSection = last && last.records[0].headingPath.join() === record.headingPath.join();
-  if (record.type === "formula" && last && sameSection) {
+  const followsText = record.type === "formula" || (record.type === "code" && config.codeBlocks);
+  if (followsText && last && sameSection) {
     last.records.push(record);
     last.body = `${last.body}\n${render(record)}`;
   } else {
@@ -166,24 +169,29 @@ for (const unit of units) {
     continue;
   }
 
-  // A single unit over budget: split a plain paragraph at sentences; a unit with
-  // formulas stays whole (an equation cut in half is useless).
-  if (unit.records.length > 1 || unit.records[0].type === "formula") {
+  // A single unit over budget: split a plain paragraph at sentences and a code
+  // block at lines; a unit with formulas stays whole (an equation cut in half
+  // is useless).
+  const isCode = config.codeBlocks && unit.records.length === 1 && unit.records[0].type === "code";
+  if (!isCode && (unit.records.length > 1 || unit.records[0].type === "formula")) {
     emit(unit.records, unit.body);
     continue;
   }
   stats.oversizedUnitsSplit++;
+  const pieces = isCode ? unit.records[0].text.split("\n") : unit.body.split(SENTENCE_BOUNDARY);
+  const joiner = isCode ? "\n" : " ";
+  const wrap = (part: string) => (isCode ? `\`\`\`\n${part}\n\`\`\`` : part);
   let part = "";
-  for (const sentence of unit.body.split(SENTENCE_BOUNDARY)) {
-    const candidate = part ? `${part} ${sentence}` : sentence;
-    if (part && countTokens(prefix(headingPath) + candidate) > MAX_CHUNK_TOKENS) {
-      emit(unit.records, part);
+  for (const sentence of pieces) {
+    const candidate = part ? `${part}${joiner}${sentence}` : sentence;
+    if (part && countTokens(prefix(headingPath) + wrap(candidate)) > MAX_CHUNK_TOKENS) {
+      emit(unit.records, wrap(part));
       part = sentence;
     } else {
       part = candidate;
     }
   }
-  if (part) emit(unit.records, part);
+  if (part) emit(unit.records, wrap(part));
 }
 flush();
 
@@ -191,7 +199,7 @@ flush();
 
 for (const figure of figures) {
   const description = descriptionFor(figure);
-  if (!figure.caption && !description) continue;
+  if (!figure.caption && !description && !figure.table) continue;
   if (description) stats.figuresWithDescription++;
 
   const label = figure.figureNumber
@@ -199,6 +207,7 @@ for (const figure of figures) {
     : figure.type === "table" ? "Table" : "Figure";
   const body = [
     figure.caption ? `${label}: ${figure.caption}` : label,
+    figure.table ?? "",
     description ? `Description: ${description}` : "",
   ].filter(Boolean).join("\n\n");
   const text = prefix(figure.headingPath) + body;
@@ -217,11 +226,12 @@ for (const figure of figures) {
   });
 }
 
-await writeFile(new URL("../../out/chunks.json", import.meta.url), JSON.stringify(chunks, null, 2));
+await writeFile(config.chunks, JSON.stringify(chunks, null, 2));
 
 const sizes = chunks.filter((c) => c.kind === "text").map((c) => c.tokens).sort((a, b) => a - b);
 const pct = (p: number) => sizes[Math.min(sizes.length - 1, Math.floor(sizes.length * p))];
 console.log({
+  document: config.id,
   recordsLeftOut: clean.texts.length - texts.length,
   chunks: chunks.length,
   textChunks: sizes.length,
