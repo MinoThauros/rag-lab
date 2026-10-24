@@ -194,3 +194,25 @@ curl -sS http://<gpu-host>:5001/v1/result/TASK_ID -o out/book.json
 - The dimension comes from the embedding model; the database column is declared to match. pgvector stores up to 16,000 dimensions but its HNSW index supports at most 2,000 (`vector`) or 4,000 (`halfvec`), so 3,072 is shortened to 1,536. These models are trained so a prefix of the vector is still a valid vector; cutting to 1,024 costs about 2% retrieval quality.
 - "Same model" means the **embedding** model: chunks and questions must be embedded with the same model and dimension. Retrieval itself is arithmetic in the database, and the generation model only ever sees retrieved **text**, so Qwen can be swapped for a frontier model without re-embedding anything.
 - Re-embed only when the embedding model or its dimension changes, or when the chunk text changes. Reasons to change it: retrieval misses traced to embeddings after trying chunking, hybrid search and reranking first; cross-language queries; hosting or privacy requirements; model retirement; input length limits; cost at scale. Switch side by side (new column, compare on the test set, then cut over), never by leaderboard deltas of 1–2 points.
+
+### 2026-10-23
+
+**Rewrite eval.** A fixed set of test conversations (`evals/rewrite/`) to measure the step that turns a follow-up into a standalone question, before deciding whether to fine-tune it. Each test freezes the conversation (Qwen answers the history once), so a rerun changes only the rewrite. Each rewrite is judged two ways: does it name the right topic (word checks), and does search with it return the right book section in the top 5 (the 5 chunks the answer model reads)? Search is also run with the message as typed (what happens with no rewrite) and with gpt-5.4's rewrite (a strong reference, not a perfect answer key). Cases follow five categories from conversational question-rewriting research (CANARD, QReCC, TREC CAsT): pronoun, implicit topic, two referents, topic change, already standalone. The last two check that the rewriter *doesn't* add anything. Five long conversations each end five ways, one per category, so categories are compared on identical history. A reviewer agent checked every case against the book; ambiguous cases accept every reasonable reading.
+
+**Baseline (88 cases × 3 runs).** Search found the right pages 255/264 times with Qwen3-8B, 259 with gpt-5.4-mini, 257 with gpt-5.4. With frozen input Qwen gives the same rewrite in most runs; a few cases still flip between runs at temperature 0 (likely from vLLM batching requests together, not confirmed), so repeated runs remain necessary. The main failure is shared by all three models: adding the old topic to a complete new question ("How does the EM algorithm work?" → "…in probabilistic PCA"). Training Qwen on gpt-5.4's rewrites would teach it that habit too: distillation copies the teacher's flaws unless the examples are filtered.
+
+**Decision matrix: how to fix a rewriter failure.** Cheapest fix first; fine-tune only when it fails.
+
+| What the eval shows | Meaning | Action |
+|---|---|---|
+| Qwen fails, frontier succeeds, consistently across many cases | Qwen lacks a skill | Prompt fix → measure; if still failing, fine-tune on the frontier's rewrites |
+| Qwen fails, frontier succeeds, in 1–2 cases | Could be a quirk | Write more cases of that shape first |
+| All models fail the same way | The instructions don't pin the behavior down | Prompt fix → measure (the teacher shares the flaw) |
+| All models fail and the prompt fix doesn't work | Must be learned from examples | Fine-tune on curated examples, not raw frontier output |
+| Even the reference rewrite's search misses | Not the rewriter's fault | Fix the test's expected section, or the search |
+
+Pass criteria are written before a run, so the result can't be reinterpreted afterwards.
+
+**Prompt fix for over-rewriting.** Replacing "If it is already standalone, return it unchanged" with "If it already names its own topic, return it unchanged: do not add the conversation's topic to it" fixed most over-rewrites for gpt-5.4 (7 → 16 of 18 runs passing) and gpt-5.4-mini (10 → 14), but Qwen produced word-for-word the same over-rewrites as before. Reverted: it didn't help the model the app runs. Lesson: pass criteria must be judged on the production model.
+
+**Multi-query retrieval: tested, rejected.** Searching with both the message as typed and the rewrite, then merging. Equal-weight merge (RRF): rescued 1 case ("ok now, what is a basis?") and broke 5, where the message alone is meaningless ("is that matrix always symmetric?") and its junk results took slots from the rewrite's. Reserved slot (top 4 from the rewrite, 1 from the message as typed): no change at all, because the one slot went to a nearby-but-wrong section. With only 5 chunks for the answer model, any merge lets in either too much junk or too little help.

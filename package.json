@@ -14,7 +14,9 @@
     "web:api": "tsx --env-file=.env src/app.ts",
     "web": "concurrently -k -n api,web -c blue,green \"npm:web:api\" \"npm:web:ui\"",
     "web:ui": "npm --prefix web run dev",
-    "set-password": "tsx --env-file=.env src/cli/setPassword.ts"
+    "set-password": "tsx --env-file=.env src/cli/setPassword.ts",
+    "eval:rewrite:build": "tsx --env-file=.env src/cli/buildRewriteEval.ts",
+    "eval:rewrite": "tsx --env-file=.env src/cli/evalRewrite.ts"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.10",

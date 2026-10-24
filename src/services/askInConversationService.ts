@@ -8,7 +8,7 @@ import { summarizeExchanges } from "../lib/conversations/summarizeExchanges.ts";
 import type { ConversationContext } from "../types/conversation.ts";
 import { answerQuestionService, type Answer } from "./answerQuestionService.ts";
 
-const WINDOW_EXCHANGES = 3; // question+answer pairs kept verbatim
+export const WINDOW_EXCHANGES = 3; // question+answer pairs kept verbatim
 
 export type ConversationAnswer = Answer & { standalone: string };
 
