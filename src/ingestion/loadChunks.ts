@@ -1,5 +1,5 @@
-// Loads the book's chunks (out/chunks.json) into Supabase: one `documents` row
-// and its `chunks` rows. `fts` is filled by the chunks_set_fts trigger;
+// Loads a document's chunks (its `chunks` file in documents.ts) into Supabase:
+// one `documents` row and its `chunks` rows. Usage: npm run load:chunks -- [document id] `fts` is filled by the chunks_set_fts trigger;
 // embeddings are filled later by the embedding step.
 //
 // Replaces the document on every run (delete cascades to its chunks), so it's
@@ -7,17 +7,13 @@
 import { readFile } from "node:fs/promises";
 import type { Chunk } from "./chunkBook.ts";
 import { supabase } from "../lib/supabase.ts";
+import { documentFromArgs } from "./documents.ts";
 
-const DOCUMENT = {
-  id: "maths-for-ml",
-  title: "Mathematics for Machine Learning",
-  source_path: "data/maths_for_ML.pdf",
-};
+const config = documentFromArgs();
+const DOCUMENT = { id: config.id, title: config.title, source_path: config.pdf };
 const BATCH_SIZE = 200;
 
-const chunks = JSON.parse(
-  await readFile(new URL("../../out/chunks.json", import.meta.url), "utf8")
-) as Chunk[];
+const chunks = JSON.parse(await readFile(config.chunks, "utf8")) as Chunk[];
 
 const check = ({ error }: { error: { message: string } | null }, step: string) => {
   if (error) throw new Error(`${step} failed: ${error.message}`);
