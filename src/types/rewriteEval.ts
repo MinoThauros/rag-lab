@@ -30,6 +30,7 @@ export type RewriteCase = CaseSpec & {
   summary: string; // exchanges older than the verbatim window, folded as the app does
   history: Turn[]; // the verbatim window
   transcript: Turn[]; // every exchange, oldest first, including those folded into the summary
+  notes: string[]; // one per exchange: the app's note on what the answer covered
   reference: string;
   reference_model: string;
 };

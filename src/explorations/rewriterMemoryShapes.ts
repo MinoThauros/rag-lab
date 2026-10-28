@@ -1,8 +1,8 @@
 // Which memory shape helps the query rewriter? Same frozen conversations, same Qwen,
 // same scoring; only the rewriter's input changes. Results: docs/journal.md (2026-10-28).
-//   today     rolling summary + last 3 exchanges (what the app does)
+//   today     rolling summary + last 3 exchanges (what the app did before B3-all)
 //   B         numbered earlier questions, each with a one-line note on its answer, + last exchange
-//   B3-all    every question numbered with its note, + last 3 exchanges word for word
+//   B3-all    every question numbered with its note, + last 3 exchanges word for word (adopted)
 //   B3-older  notes only for turns older than the window, + last 3 exchanges word for word
 //   S         one structured rolling summary (numbered questions, topics), updated every turn,
 //             + last 3 questions, each with a short summary of its answer instead of the answer
@@ -11,10 +11,10 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { parseArgs } from "node:util";
 import { REWRITE_SYSTEM_PROMPT } from "../constants/prompts.ts";
-import { rewriteInput } from "../lib/conversations/rewriteQuestion.ts";
 import { complete } from "../lib/qwen.ts";
 import { retrieve } from "../lib/retrieval/retrieve.ts";
 import type { RewriteCase } from "../types/rewriteEval.ts";
+import { formatTranscript } from "../utils/transcript.ts";
 import { EVAL_DOCUMENT_IDS, firstHitRank, rewriteHitsTerms } from "../utils/rewriteEval.ts";
 
 const RUNS = 3;
@@ -120,8 +120,18 @@ async function inputS(c: RewriteCase, prompt: string) {
   );
 }
 
+// The rewriter's input before B3-all, kept here so "today" can still be run.
+const summaryInput = (c: RewriteCase) =>
+  [
+    c.summary && `Summary of the conversation so far:\n${c.summary}`,
+    `Recent conversation:\n${formatTranscript(c.history)}`,
+    `Latest message: ${c.message}`,
+  ]
+    .filter(Boolean)
+    .join("\n\n");
+
 const allShapes: Record<string, (c: RewriteCase) => Promise<string>> = {
-  today: async (c) => rewriteInput({ summary: c.summary, recent: c.history }, c.message),
+  today: async (c) => summaryInput(c),
   B: async (c) => {
     const all = exchangesOf(c);
     return shapeInput(c, all, all.slice(-1));

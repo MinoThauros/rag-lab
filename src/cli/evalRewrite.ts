@@ -14,8 +14,8 @@ import { rewriteInput, rewriteQuestion } from "../lib/conversations/rewriteQuest
 import { QWEN_MODEL } from "../lib/qwen.ts";
 import { retrieve } from "../lib/retrieval/retrieve.ts";
 import type { RewriteCase } from "../types/rewriteEval.ts";
-import type { ConversationContext } from "../types/conversation.ts";
-import { EVAL_DOCUMENT_IDS, firstHitRank, isUnchanged, rewriteHitsTerms } from "../utils/rewriteEval.ts";
+import type { Exchange } from "../types/conversation.ts";
+import { EVAL_DOCUMENT_IDS, exchangesOf, firstHitRank, isUnchanged, rewriteHitsTerms } from "../utils/rewriteEval.ts";
 
 const CASES = "evals/rewrite/cases.jsonl";
 const TOP_K = 5; // what the answer step sees
@@ -28,12 +28,12 @@ const runs = Number(args.runs);
 const ownerId = process.env.OWNER_ID!;
 
 // Same system prompt and input as the app's rewriter; only the model changes.
-async function rewriteWithFoundry(context: ConversationContext, question: string) {
+async function rewriteWithFoundry(exchanges: Exchange[], question: string) {
   const response = await azureOpenAI.chat.completions.create({
     model: args.rewriter!,
     messages: [
       { role: "system", content: REWRITE_SYSTEM_PROMPT },
-      { role: "user", content: rewriteInput(context, question) },
+      { role: "user", content: rewriteInput(exchanges, question) },
     ],
     // GPT-5 models reject a custom temperature; reasoning tokens count toward this cap.
     max_completion_tokens: 2000,
@@ -52,11 +52,11 @@ type RunResult = { rewrite: string; terms: boolean; unchanged: boolean; rank: nu
 type CaseResult = { case: RewriteCase; rawRank: number | null; referenceRank: number | null; runs: RunResult[] };
 
 async function evalCase(c: RewriteCase): Promise<CaseResult> {
-  const context = { summary: c.summary, recent: c.history };
+  const exchanges = exchangesOf(c);
   const [rawRank, referenceRank] = await Promise.all([rankFor(c, c.message), rankFor(c, c.reference)]);
   const results: RunResult[] = [];
   for (let run = 0; run < runs; run++) {
-    const rewritten = await rewrite(context, c.message);
+    const rewritten = await rewrite(exchanges, c.message);
     results.push({
       rewrite: rewritten,
       terms: rewriteHitsTerms(c, rewritten),

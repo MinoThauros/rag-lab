@@ -1,9 +1,18 @@
 // Pure scoring for the rewrite eval.
+import type { Exchange } from "../types/conversation.ts";
 import type { RewriteCase } from "../types/rewriteEval.ts";
 
 // The eval searches only its own book, so other documents in the owner's account
 // don't change its results.
 export const EVAL_DOCUMENT_IDS = ["maths-for-ml"];
+
+// The case's conversation as the rewriter sees it.
+export const exchangesOf = (c: Pick<RewriteCase, "transcript" | "notes">): Exchange[] =>
+  Array.from({ length: c.transcript.length / 2 }, (_, k) => ({
+    user: c.transcript[2 * k].content,
+    assistant: c.transcript[2 * k + 1].content,
+    note: c.notes?.[k] ?? null,
+  }));
 
 const has = (text: string, term: string) => text.toLowerCase().includes(term.toLowerCase());
 

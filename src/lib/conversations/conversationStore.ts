@@ -55,7 +55,7 @@ export async function getMessages(
   await getConversation(ownerId, conversationId);
   const { data, error } = await supabase
     .from("messages")
-    .select("seq, role, content, standalone_question, sources")
+    .select("seq, role, content, standalone_question, sources, answer_note")
     .eq("conversation_id", conversationId)
     .gt("seq", afterSeq)
     .order("seq");
@@ -68,7 +68,7 @@ export async function saveTurn(
   conversationId: string,
   firstSeq: number,
   user: { content: string; standalone: string },
-  assistant: { content: string; sources: unknown }
+  assistant: { content: string; sources: unknown; note: string }
 ) {
   const { error } = await supabase.from("messages").insert([
     {
@@ -84,6 +84,7 @@ export async function saveTurn(
       role: "assistant",
       content: assistant.content,
       sources: assistant.sources,
+      answer_note: assistant.note,
     },
   ]);
   fail("save turn", error);

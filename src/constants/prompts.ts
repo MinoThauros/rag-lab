@@ -12,6 +12,10 @@ export const REWRITE_SYSTEM_PROMPT = [
   "If it is already standalone, return it unchanged. Output only the question.",
 ].join(" ");
 
+// Same wording as the memory-shape experiment that chose this layout (B3-all).
+export const ANSWER_NOTE_SYSTEM_PROMPT =
+  "In one line of at most 20 words, note what this answer covered: the key terms, methods and examples it named. Output only the note.";
+
 export const SUMMARY_MAX_WORDS = 200;
 
 export const SUMMARY_SYSTEM_PROMPT = [

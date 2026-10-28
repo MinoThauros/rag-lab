@@ -2,21 +2,26 @@
 //  1. plays each history turn through the real pipeline (Qwen + retrieval) once,
 //     folding exchanges past the verbatim window into the rolling summary as the
 //     app does, so every eval run sees the same conversation;
-//  2. writes a reference rewrite with a frontier model on Foundry, from exactly
+//  2. notes each answer as the app does, for the rewriter's input;
+//  3. writes a reference rewrite with a frontier model on Foundry, from exactly
 //     the input Qwen's rewriter gets. It's the ceiling, not a training label.
 // Cases already built keep their frozen conversation; spec fields (expectations)
-// are always refreshed from the drafts. Pass ids to rebuild those cases.
-// Usage: npm run eval:rewrite:build -- [id …]
+// are always refreshed from the drafts. Pass ids to rebuild those cases, or
+// --references to keep every conversation and only rewrite the references (and
+// add missing notes), e.g. after the rewriter's input changes.
+// Usage: npm run eval:rewrite:build -- [--references] [id …]
 import { readFile, writeFile } from "node:fs/promises";
+import { parseArgs } from "node:util";
+import { WINDOW_EXCHANGES } from "../constants/conversation.ts";
 import { REWRITE_SYSTEM_PROMPT } from "../constants/prompts.ts";
 import { azureOpenAI } from "../lib/azureOpenAI.ts";
+import { noteAnswer } from "../lib/conversations/noteAnswer.ts";
 import { rewriteInput } from "../lib/conversations/rewriteQuestion.ts";
 import { summarizeExchanges } from "../lib/conversations/summarizeExchanges.ts";
 import { answerQuestionService } from "../services/answerQuestionService.ts";
-import { WINDOW_EXCHANGES } from "../services/askInConversationService.ts";
 import type { ConversationContext, Turn } from "../types/conversation.ts";
 import type { DraftCase, RewriteCase } from "../types/rewriteEval.ts";
-import { EVAL_DOCUMENT_IDS } from "../utils/rewriteEval.ts";
+import { EVAL_DOCUMENT_IDS, exchangesOf } from "../utils/rewriteEval.ts";
 
 const DRAFTS = "evals/rewrite/cases.draft.jsonl";
 const CASES = "evals/rewrite/cases.jsonl";
@@ -24,7 +29,11 @@ const REFERENCE_MODEL = "gpt-5.4-standard"; // Foundry deployment of gpt-5.4 (th
 const CONCURRENCY = 4; // vLLM batches these on the GPU
 
 const ownerId = process.env.OWNER_ID!;
-const rebuild = new Set(process.argv.slice(2));
+const { values: flags, positionals } = parseArgs({
+  options: { references: { type: "boolean", default: false } },
+  allowPositionals: true,
+});
+const rebuild = new Set(positionals);
 
 const readJsonl = async <T>(path: string): Promise<T[]> =>
   (await readFile(path, "utf8").catch(() => ""))
@@ -71,24 +80,42 @@ function conversationFor(draft: DraftCase): Promise<Conversation> {
   return threads.get(draft.thread)!;
 }
 
-async function buildCase(draft: DraftCase): Promise<RewriteCase> {
-  const { history: _userTurns, ...spec } = draft;
-  const { context, transcript } = await conversationFor(draft);
+// One note per answer; threads share answers, so cache by text.
+const notes = new Map<string, Promise<string>>();
+const noteFor = (answer: string) => {
+  if (!notes.has(answer)) notes.set(answer, noteAnswer(answer));
+  return notes.get(answer)!;
+};
+const notesOf = (transcript: Turn[]) =>
+  Promise.all(transcript.filter((t) => t.role === "assistant").map((t) => noteFor(t.content)));
 
+async function writeReference(c: RewriteCase): Promise<string> {
   const response = await azureOpenAI.chat.completions.create({
     model: REFERENCE_MODEL,
     messages: [
       { role: "system", content: REWRITE_SYSTEM_PROMPT },
-      { role: "user", content: rewriteInput(context, draft.message) },
+      { role: "user", content: rewriteInput(exchangesOf(c), c.message) },
     ],
     // GPT-5 models reject a custom temperature; reasoning tokens count toward this cap.
     max_completion_tokens: 2000,
     reasoning_effort: "medium",
   });
   const reference = response.choices[0].message.content?.trim();
-  if (!reference) throw new Error(`${draft.id}: empty reference rewrite`);
+  if (!reference) throw new Error(`${c.id}: empty reference rewrite`);
+  return reference;
+}
 
-  return { ...spec, summary: context.summary, history: context.recent, transcript, reference, reference_model: REFERENCE_MODEL };
+async function buildCase(draft: DraftCase): Promise<RewriteCase> {
+  const { history: _userTurns, ...spec } = draft;
+  const { context, transcript } = await conversationFor(draft);
+  const built = { ...spec, summary: context.summary, history: context.recent, transcript, notes: await notesOf(transcript) };
+  return { ...built, reference: await writeReference({ ...built, reference: "", reference_model: "" }), reference_model: REFERENCE_MODEL };
+}
+
+// Same conversation; notes added if missing, reference rewritten.
+async function refreshReference(c: RewriteCase): Promise<RewriteCase> {
+  const withNotes = { ...c, notes: c.notes ?? (await notesOf(c.transcript)) };
+  return { ...withNotes, reference: await writeReference(withNotes), reference_model: REFERENCE_MODEL };
 }
 
 const drafts = await readJsonl<DraftCase>(DRAFTS);
@@ -102,8 +129,18 @@ for (let i = 0; i < toBuild.length; i += CONCURRENCY) {
     console.log(`${c.id}: ${c.reference}`);
   });
 }
+if (flags.references) {
+  const toRefresh = drafts.filter((d) => !toBuild.includes(d)).map((d) => ({ ...built.get(d.id)!, message: d.message }));
+  for (let i = 0; i < toRefresh.length; i += CONCURRENCY) {
+    const batch = await Promise.all(toRefresh.slice(i, i + CONCURRENCY).map(refreshReference));
+    batch.forEach((c) => {
+      built.set(c.id, c);
+      console.log(`${c.id}: ${c.reference}`);
+    });
+  }
+}
 
 // Draft order; expectations from the draft, frozen conversation from the build.
 const cases = drafts.map(({ history, ...spec }) => ({ ...built.get(spec.id)!, ...spec }));
 await writeFile(CASES, cases.map((c) => JSON.stringify(c)).join("\n") + "\n");
-console.log(`\nBuilt ${toBuild.length}; wrote ${cases.length} cases to ${CASES}`);
+console.log(`\nBuilt ${toBuild.length}${flags.references ? ", references rewritten for the rest" : ""}; wrote ${cases.length} cases to ${CASES}`);
