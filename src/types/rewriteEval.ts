@@ -29,6 +29,7 @@ export type DraftCase = CaseSpec & { thread?: string; history: { user: string; s
 export type RewriteCase = CaseSpec & {
   summary: string; // exchanges older than the verbatim window, folded as the app does
   history: Turn[]; // the verbatim window
+  transcript: Turn[]; // every exchange, oldest first, including those folded into the summary
   reference: string;
   reference_model: string;
 };

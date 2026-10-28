@@ -14,7 +14,7 @@ import { rewriteInput } from "../lib/conversations/rewriteQuestion.ts";
 import { summarizeExchanges } from "../lib/conversations/summarizeExchanges.ts";
 import { answerQuestionService } from "../services/answerQuestionService.ts";
 import { WINDOW_EXCHANGES } from "../services/askInConversationService.ts";
-import type { ConversationContext } from "../types/conversation.ts";
+import type { ConversationContext, Turn } from "../types/conversation.ts";
 import type { DraftCase, RewriteCase } from "../types/rewriteEval.ts";
 import { EVAL_DOCUMENT_IDS } from "../utils/rewriteEval.ts";
 
@@ -33,32 +33,39 @@ const readJsonl = async <T>(path: string): Promise<T[]> =>
     .map((line) => JSON.parse(line));
 
 // Plays the user turns through the pipeline, folding the summary as the app does.
-async function playConversation(userTurns: DraftCase["history"]): Promise<ConversationContext> {
+// Also keeps the full transcript, so other memory shapes can be built from the same answers.
+type Conversation = { context: ConversationContext; transcript: Turn[] };
+async function playConversation(userTurns: DraftCase["history"]): Promise<Conversation> {
   const context: ConversationContext = { summary: "", recent: [] };
+  const transcript: Turn[] = [];
   for (const turn of userTurns) {
     const answer = await answerQuestionService(turn.standalone ?? turn.user, () => {}, { ownerId, documentIds: EVAL_DOCUMENT_IDS }, {
       summary: context.summary,
       recent: [...context.recent],
     });
-    context.recent.push({ role: "user", content: turn.user }, { role: "assistant", content: answer.text });
+    const exchange: Turn[] = [{ role: "user", content: turn.user }, { role: "assistant", content: answer.text }];
+    context.recent.push(...exchange);
+    transcript.push(...exchange);
     const overflow = context.recent.length - WINDOW_EXCHANGES * 2;
     if (overflow > 0) {
       context.summary = await summarizeExchanges(context.summary, context.recent.slice(0, overflow));
       context.recent = context.recent.slice(overflow);
     }
   }
-  return context;
+  return { context, transcript };
 }
 
 // One conversation per thread: reuse an already-built case's, or play it once.
-const threads = new Map<string, Promise<ConversationContext>>();
-function conversationFor(draft: DraftCase): Promise<ConversationContext> {
+const threads = new Map<string, Promise<Conversation>>();
+function conversationFor(draft: DraftCase): Promise<Conversation> {
   if (!draft.thread) return playConversation(draft.history);
   if (!threads.has(draft.thread)) {
     const sibling = [...built.values()].find((c) => c.thread === draft.thread && !rebuild.has(c.id));
     threads.set(
       draft.thread,
-      sibling ? Promise.resolve({ summary: sibling.summary, recent: sibling.history }) : playConversation(draft.history)
+      sibling
+        ? Promise.resolve({ context: { summary: sibling.summary, recent: sibling.history }, transcript: sibling.transcript })
+        : playConversation(draft.history)
     );
   }
   return threads.get(draft.thread)!;
@@ -66,7 +73,7 @@ function conversationFor(draft: DraftCase): Promise<ConversationContext> {
 
 async function buildCase(draft: DraftCase): Promise<RewriteCase> {
   const { history: _userTurns, ...spec } = draft;
-  const context = await conversationFor(draft);
+  const { context, transcript } = await conversationFor(draft);
 
   const response = await azureOpenAI.chat.completions.create({
     model: REFERENCE_MODEL,
@@ -81,7 +88,7 @@ async function buildCase(draft: DraftCase): Promise<RewriteCase> {
   const reference = response.choices[0].message.content?.trim();
   if (!reference) throw new Error(`${draft.id}: empty reference rewrite`);
 
-  return { ...spec, summary: context.summary, history: context.recent, reference, reference_model: REFERENCE_MODEL };
+  return { ...spec, summary: context.summary, history: context.recent, transcript, reference, reference_model: REFERENCE_MODEL };
 }
 
 const drafts = await readJsonl<DraftCase>(DRAFTS);
