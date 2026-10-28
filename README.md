@@ -58,7 +58,7 @@ flowchart TB
 | Store | **Supabase Postgres + pgvector 0.8** (HNSW) **+ Postgres full-text** (GIN) | One database for vectors, keywords, metadata and permissions; enough for well under ~5–10M vectors |
 | Retrieval | **Hybrid**: top-20 vector + top-20 keyword, merged with **reciprocal rank fusion** | The 2026 baseline; no score calibration needed |
 | Generation | **Qwen3-8B-FP8** on vLLM, 8,192-token context, streaming | Fully local answer path; swappable for any OpenAI-compatible model without re-embedding |
-| Memory | Conversations in Postgres: **last 3 exchanges verbatim + a rolling summary** of older ones; follow-ups **rewritten into standalone questions** before retrieval | The standard short-term memory pattern; retrieval can only search with the text it's given |
+| Memory | Conversations in Postgres. The answer model gets the **last 3 exchanges verbatim + a rolling summary** of older ones. The rewriter, which turns follow-ups into **standalone questions** before retrieval, gets **every earlier question, numbered, with a one-line note on its answer**, plus the last 3 exchanges | A prose summary lost the order of questions and pulled old topics into new ones; numbered questions with notes fixed both (measured below) |
 | Auth & tenancy | **Supabase Auth**, httpOnly session cookies, per-user `owner_id` on documents and conversations, RLS policies as a second line of defense | Several people, one deployment, no data crossing between them |
 | Interfaces | Express SSE API, React + shadcn + TanStack Query + KaTeX web app, readline terminal chat | Math-heavy answers need real typesetting |
 
@@ -108,7 +108,7 @@ The last two rows are the point: retrieval always returns *something*, and a sma
 
 ### Conversation memory: where a small model's judgment runs out
 
-Each turn: load the rolling summary and the recent turns → **rewrite** the message into a standalone question → retrieve and answer → save both messages → fold anything older than 3 exchanges into the summary. Messages keep both what the user typed (`content`) and what was actually searched for (`standalone_question`), so every retrieval miss can be traced.
+Each turn: load the conversation → **rewrite** the message into a standalone question → retrieve and answer → note in one line what the answer covered → save both messages → fold anything older than 3 exchanges into the summary. (The rewriter's input changed after the eval below: see "Measuring the rewriter".) Messages keep both what the user typed (`content`) and what was actually searched for (`standalone_question`), so every retrieval miss can be traced.
 
 **What worked**
 
@@ -129,8 +129,21 @@ Each turn: load the rolling summary and the recent turns → **rewrite** the mes
 
 - **Single runs can't validate prompt changes on a small model.** Fixes "worked" once and flipped on the next run; borderline cases need repeated runs and a scored test set.
 - **The rewrite step needs more model than the answering step.** Rewriting a follow-up is a judgment call about what the user meant; answering from given sources is closer to reading comprehension. A frontier-class model fixed the rewrite failures immediately.
-- **Model strength is a constraint here, not a dial.** The rewrite stays on the local Qwen3-8B; the next step is to fine-tune a small local rewrite model (gpt-5.4-mini's rewrites are a natural source of training examples) instead of sending conversations to a cloud model.
+- **Model strength is a constraint here, not a dial.** The rewrite stays on the local Qwen3-8B rather than sending conversations to a cloud model.
 - The summary drifts past its 200-word cap (~1,000 characters observed): the length instruction is followed loosely.
+
+### Measuring the rewriter, and why it wasn't fine-tuned
+
+A scored test set replaced single runs: **108 frozen conversations** (80 to tune on, 28 held out), each played once through the real pipeline, scored on 3 rewrites each. A rewrite is wrong if it misses the topic it should name or drags in one it shouldn't; search is checked on whether the right book section lands in the top 5. A frontier model (gpt-5.4) writes a reference rewrite from the same input, as the ceiling.
+
+| Rewriter input (Qwen3-8B) | Wrong rewrites, dev / held-out | Right section found, dev / held-out |
+|---|---|---|
+| Rolling summary + last 3 exchanges | 20/240 · 15–17/84 | 232/240 · 78/84 |
+| **Numbered questions with one-line answer notes + last 3 exchanges** | **13/240 · 9/84** | 230/240 · 81/84 |
+
+- **The summary was the problem, not the model.** 28 of 42 wrong rewrites came from conversations long enough to have a summary: it lost the order of questions ("the first thing I asked about") and read the old topic as current, so new questions got "…in the context of Gaussians" appended. Two better-structured summaries made it worse, not better. Removing it from the rewriter's input (the answer model keeps it) fixed both. Experiments: `src/explorations/rewriterMemoryShapes.ts`, [docs/journal.md](docs/journal.md).
+- **What's left is judgment**: "walk me through the example in the book" left unchanged, "which one…" without naming the options, "any examples?" attached to an earlier topic. gpt-5.4 gets most of these right, which is the classic case for fine-tuning a small model on a big one's outputs.
+- **Fine-tuning was planned, then shelved: no clear use case.** Even with those mistakes, search finds the right section 230/240 times, and the reference rewrites 107/108. The gap left is real but small, and a cheap structural fix closed most of what mattered. The eval, the pass criteria and the training-data plan are kept in the journal for when a use case appears.
 
 ---
 
@@ -152,7 +165,8 @@ For an end-to-end private RAG engagement over technical documents:
 - **Next step: Kubernetes.** Run the models on k3s sharing one GPU, behind Traefik with Supabase login. Decisions still open: [docs/next-step.md](docs/next-step.md).
 - **Evaluation set**: 20+ hand-written questions with expected sources, including unanswerable ones; recall@5 and MRR for retrieval; pass/fail judges for correctness, grounding and refusal.
 - **Refusal guardrails**: relevance threshold and a reranker (Qwen3-Reranker on the GPU) to stop the "stretch" failure.
-- **Fine-tune a local rewrite model**: close the gap between Qwen3-8B and gpt-5.4-mini on follow-up rewriting while keeping conversations on the GPU node; measure it on repeated multi-turn runs.
+- **Search eval and reranker**: a few hundred questions with known passages to measure ranking (MRR, nDCG), then an off-the-shelf reranker; fine-tune one only if it leaves a measured gap.
+- **Fine-tuning the rewriter: shelved** (see above); eval and plan ready if a use case appears.
 - **Baselines**: Docling's own hybrid chunker vs ours; Qwen3-8B vs a frontier model on the same retrieval.
 
 ---
